@@ -17,8 +17,9 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
+        // Should redirect when not logged in
         get("/",(req,res)->{
-            return "Fcking wrksss";
+            return "HomePage";
         });
 
         // Cisto da se ima

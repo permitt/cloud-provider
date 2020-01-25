@@ -1,5 +1,7 @@
 package beans;
 
+import beans.VM;
+
 public class Disk {
     private String ime;
     private String tip;

@@ -15,16 +15,11 @@ public class SparkMainApp {
 
     private static Gson gson = new Gson();
     private static Map<String, Korisnik> korisnici = new HashMap<String, Korisnik>();
+    private static Map<String, Disk> diskovi = new HashMap<String,Disk>();
 
     public static void main(String[] args) throws IOException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
-
-
-        Disk d = new Disk("aa","sda",12,"sd");
-        Korisnik k = new Korisnik("a","b","aaa","ad",d,"SUPERADMIN");
-        String objekat = gson.toJson(k);
-        System.out.println(objekat);
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Unesite username superadmina: ");

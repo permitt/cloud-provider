@@ -7,6 +7,7 @@ public class BazaPodataka {
 	private HashMap<String, Organizacija> organizacije;
 	private HashMap<String, VM> virtualeMasine;
 	private HashMap<String, Disk> diskovi;
+	private HashMap<String, KategorijaVM> kategorije;
 	private String putanja;
 
 	public BazaPodataka() {
@@ -16,9 +17,18 @@ public class BazaPodataka {
 		this.diskovi = new HashMap<>();
 	} 
 	
-	public void dodajOrganizaciju(Organizacija o) {
-		this.organizacije.put(o.getIme(), o);
+	public String dodajOrganizaciju(Organizacija o) {
+		if(nadjiOrganizaciju(o.getIme())==null) {
+			this.organizacije.put(o.getIme(), o);
+			return "OK";
+		}
+		else {
+			return "EROR";
+		}
+		
 	}
+	//treba napraviti ====> dodajKorisnika, dodajVM, dodajDisk 
+	
 	public Organizacija nadjiOrganizaciju(String ime) {
 		if (this.organizacije.containsKey(ime)) {
 			return this.organizacije.get(ime);
@@ -26,19 +36,87 @@ public class BazaPodataka {
 		else
 			return null;
 	}
+	
+	
 	public String izmeniOrganizaciju(String ime,String opis,String logo) {
-		String poruka = "";
+		String poruka = "Uspesna izmena!";
 		Organizacija o = this.nadjiOrganizaciju(ime);
 		if(o!=null) {
 			poruka = "Organizacija sa imenom " + ime + " vec postoji!";
+			return poruka;
 		}
 		else {
-			o.setIme(ime);
+			o.setIme(ime); 
 			o.setLogo(logo);
 			o.setOpis(opis);
 		}
 		return poruka;
 	}
+	 public String obrisiKategoriju(String ime) {
+		 if(kategorijaSadrziVM(ime)) {
+			 return "EROR";
+		 }
+		 else{
+			 this.kategorije.remove(ime);
+			 return "OK";
+		 }
+		 
+	 }
+	private boolean kategorijaSadrziVM(String ime) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public String izmeniKategoriju(String staroIme,String novoIme, int brojJezgara, int RAM, int GPU) {
+		if(this.kategorije.containsKey(novoIme)) {
+			return "Ime vec postoji";
+		}
+		else if(brojJezgara < 0) {
+			return "Broj jezgara mora biti veci od 0";
+		}
+		else if(RAM < 0) {
+			return "RAM mora biti veci od 0";
+		}
+		else if(GPU < 0) {
+			return "GPU mora biti veci od 0";
+		}
+		else {
+			this.kategorije.get(staroIme).setIme(novoIme);
+			this.kategorije.get(staroIme).setBrojJezgara(brojJezgara);
+			this.kategorije.get(staroIme).setGPU(GPU);
+			this.kategorije.get(staroIme).setRAM(RAM);
+			return "OK";
+		}
+	}
+	public String dodajKategoriju(String ime,KategorijaVM k) {
+		if(!this.kategorije.containsKey(ime)) {
+			this.kategorije.put(ime, k);
+			return "OK";
+		}
+		else {
+			return "GRESKA";
+		}
+	}
+	
+	public HashMap<String, VM> dobaviListuVM(Korisnik k){
+		//vraca listu vMasina organizacije kojoj korisnik pripada ili ciji je admin
+		HashMap<String, VM> vMasine = new HashMap<String, VM>();
+		Organizacija org = k.getOrganizacija();
+		for(VM vm : org.getResursi()) {
+			vMasine.put(vm.getIme(), vm);
+		}
+		return vMasine;
+	}
+	public void dodajVM() {
+		//TODO
+	}
+	public void obrisiVM() {
+		//TODO
+	}
+	public void izmeniVM() {
+		//TODO
+	}
+	
 	public void napuniBazu(){
 
 	}

@@ -6,13 +6,15 @@ public class BazaPodataka {
 	private HashMap<String, Korisnik> korisnici;
 	private HashMap<String, Organizacija> organizacije;
 	private HashMap<String, VM> virtualeMasine;
-	
+	private HashMap<String, Disk> diskovi;
+	private String putanja;
+
 	public BazaPodataka() {
 		this.korisnici = new HashMap<String, Korisnik>();
 		this.organizacije = new HashMap<String, Organizacija>();
 		this.virtualeMasine = new HashMap<String, VM>();
+		this.diskovi = new HashMap<>();
 	}
-	
 	public void dodajOrganizaciju(Organizacija o) {
 		this.organizacije.put(o.getIme(), o);
 	}
@@ -36,5 +38,22 @@ public class BazaPodataka {
 		}
 		return poruka;
 	}
-	
+	public void napuniBazu(){
+
+	}
+
+	public boolean unikatanMejlKorisnika(String mejl){
+		if(korisnici.containsKey(mejl))
+			return false;
+		return true;
+	}
+
+	public boolean unikatnoImeDiska(String ime){
+		if(diskovi.containsKey(ime))
+			return false;
+		return true;
+	}
+
+
+
 }

@@ -65,4 +65,6 @@ public class Korisnik {
         this.uloga = uloga;
     }
 
+
+
 }

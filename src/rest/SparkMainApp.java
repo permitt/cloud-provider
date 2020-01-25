@@ -21,8 +21,11 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
+        Korisnik superAdmin = new Korisnik("superAdmin@superAdmin.com","superAdmin","Super","Admin",null,"superadmin");
+        korisnici.put("superAdmin",superAdmin);
+
         Scanner sc = new Scanner(System.in);
-        System.out.println("Unesite username superadmina: ");
+        System.out.println("Unesite email superadmina: ");
         String user = sc.next();
         System.out.println("Unesite password superadmina: ");
         String pw = sc.next();

@@ -48,12 +48,22 @@ public class BazaPodataka {
 		return true;
 	}
 
+	public Korisnik nadjiKorisnika(String mejl){
+		if(korisnici.containsKey(mejl))
+			return korisnici.get(mejl);
+
+		return null;
+	}
+
+	public void dodajKorisnika(Korisnik k){
+		korisnici.put(k.getEmail(),k);
+	}
+
 	public boolean unikatnoImeDiska(String ime){
 		if(diskovi.containsKey(ime))
 			return false;
 		return true;
 	}
-
 
 
 }

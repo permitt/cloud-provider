@@ -12,4 +12,29 @@ public class BazaPodataka {
 		this.organizacije = new HashMap<String, Organizacija>();
 		this.virtualeMasine = new HashMap<String, VM>();
 	}
+	
+	public void dodajOrganizaciju(Organizacija o) {
+		this.organizacije.put(o.getIme(), o);
+	}
+	public Organizacija nadjiOrganizaciju(String ime) {
+		if (this.organizacije.containsKey(ime)) {
+			return this.organizacije.get(ime);
+		}
+		else
+			return null;
+	}
+	public String izmeniOrganizaciju(String ime,String opis,String logo) {
+		String poruka = "";
+		Organizacija o = this.nadjiOrganizaciju(ime);
+		if(o!=null) {
+			poruka = "Organizacija sa imenom " + ime + " vec postoji!";
+		}
+		else {
+			o.setIme(ime);
+			o.setLogo(logo);
+			o.setOpis(opis);
+		}
+		return poruka;
+	}
+	
 }

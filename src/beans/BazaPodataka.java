@@ -14,7 +14,8 @@ public class BazaPodataka {
 		this.organizacije = new HashMap<String, Organizacija>();
 		this.virtualeMasine = new HashMap<String, VM>();
 		this.diskovi = new HashMap<>();
-	}
+	} 
+	
 	public void dodajOrganizaciju(Organizacija o) {
 		this.organizacije.put(o.getIme(), o);
 	}

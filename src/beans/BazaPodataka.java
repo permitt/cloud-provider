@@ -121,6 +121,22 @@ public class BazaPodataka {
 
 	}
 
+	public boolean unikatnoImeDiska(String ime){
+		if(diskovi.containsKey(ime))
+			return false;
+		return true;
+	}
+
+	public Disk nadjiDisk(String ID){
+		if(diskovi.containsKey(ID))
+			return diskovi.get(ID);
+		return null;
+	}
+
+	public void dodajDisk(String ime,String tip,int kapacitet,VM v){
+		diskovi.put(ime,new Disk(ime,tip,kapacitet,v));
+	}
+
 	public boolean unikatanMejlKorisnika(String mejl){
 		if(korisnici.containsKey(mejl))
 			return false;
@@ -138,11 +154,7 @@ public class BazaPodataka {
 		korisnici.put(k.getEmail(),k);
 	}
 
-	public boolean unikatnoImeDiska(String ime){
-		if(diskovi.containsKey(ime))
-			return false;
-		return true;
-	}
+
 
 
 }

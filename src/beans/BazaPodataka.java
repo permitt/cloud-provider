@@ -54,7 +54,7 @@ public class BazaPodataka {
 		return poruka;
 	}
 	 public String obrisiKategoriju(String ime) {
-		 if(kategorijaSadrziVM(ime)) {
+		 if(postojiVMOveKategorije(ime)) {
 			 return "EROR";
 		 }
 		 else{
@@ -63,9 +63,15 @@ public class BazaPodataka {
 		 }
 		 
 	 }
-	private boolean kategorijaSadrziVM(String ime) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean postojiVMOveKategorije(String ime) {
+		boolean postoji = false;
+		for(VM vm : this.virtualneMasine.values()) {
+			if(vm.getKategorija().getIme().equals(ime)) {
+				postoji = true;
+				break;
+			}
+		}
+		return postoji;
 	}
 
 	public String izmeniKategoriju(String staroIme,String novoIme, int brojJezgara, int RAM, int GPU) {
@@ -114,12 +120,12 @@ public class BazaPodataka {
 		return true;
 	}
 	
-	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi) {
+	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String imeOrganizacije) {
 		//ne znam jos kako da proveravam parametre, kako da vracam sta nije dobro
 		//treba razmisliti malo o tome
 		VM vm ;
 		if(unikatnoImeVM(ime)) {
-			vm = new VM(ime,kategorija,diskovi);
+			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije));
 			return "OK";
 		}
 		else {
@@ -146,7 +152,9 @@ public class BazaPodataka {
 			return "Ime VM nije unikatno.";
 		}
 	}
-	
+	public void promeniListuAktivnostiVM(String imeVM) {
+		
+	}
 	public void napuniBazu(){
 
 	}

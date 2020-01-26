@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class VM {
 	private String ime;
@@ -9,12 +10,14 @@ public class VM {
 	private int RAM;
 	private int GPU;
 	private ArrayList<Disk> diskovi;
+	private Organizacija organizacija;
+	private ArrayList<Date> listaAktivnosti;
 	
 	public VM() {
 		
 	}
 	
-	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi) {
+	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, Organizacija o) {
 		super();
 		this.ime = ime;
 		this.kategorija = kategorija;
@@ -22,8 +25,26 @@ public class VM {
 		this.GPU = this.kategorija.getGPU();
 		this.brojJezgara = this.kategorija.getBrojJezgara();
 		this.RAM = this.kategorija.getRAM();
+		this.organizacija = o;
+		this.listaAktivnosti = new ArrayList<Date>();
 	}
 	
+	public Organizacija getOrganizacija() {
+		return organizacija;
+	}
+
+	public void setOrganizacija(Organizacija organizacija) {
+		this.organizacija = organizacija;
+	}
+
+	public ArrayList<Date> getListaAktivnosti() {
+		return listaAktivnosti;
+	}
+
+	public void setListaAktivnosti(ArrayList<Date> listaAktivnosti) {
+		this.listaAktivnosti = listaAktivnosti;
+	}
+
 	public String getIme() {
 		return ime;
 	}

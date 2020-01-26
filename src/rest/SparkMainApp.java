@@ -1,5 +1,6 @@
 package rest;
 
+import beans.BazaPodataka;
 import beans.Disk;
 import beans.Korisnik;
 import com.google.gson.Gson;
@@ -14,26 +15,40 @@ import static spark.Spark.*;
 public class SparkMainApp {
 
     private static Gson gson = new Gson();
-    private static Map<String, Korisnik> korisnici = new HashMap<String, Korisnik>();
-    private static Map<String, Disk> diskovi = new HashMap<String,Disk>();
+    private static BazaPodataka bp = new BazaPodataka();
+
 
     public static void main(String[] args) throws IOException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
         Korisnik superAdmin = new Korisnik("superAdmin@superAdmin.com","superAdmin","Super","Admin",null,"superadmin");
-        korisnici.put("superAdmin",superAdmin);
+        bp.dodajKorisnika(superAdmin);
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Unesite email superadmina: ");
-        String user = sc.next();
-        System.out.println("Unesite password superadmina: ");
-        String pw = sc.next();
-        System.out.println("User superadmina : " + user + " a pw je : " + pw);
+
+        get("/",(req,res) ->{
+            System.out.println("POGPODJEN");
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            if(k == null)
+                res.redirect("/login.html");
+
+            return res;
+        });
+
         // Should redirect when not logged in
         get("/rest/demo",(req,res)->{
             return "HomePage";
         });
+
+        post("rest/login",(req,res) ->{
+
+            String payload = req.body();
+            Korisnik k = gson.fromJson(payload,Korisnik.class);
+
+            return "OK";
+        });
+
 
         // Cisto da se ima
         get("/rest/demo/logout", (req, res) -> {

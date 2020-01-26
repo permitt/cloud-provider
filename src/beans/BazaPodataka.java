@@ -1,11 +1,12 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BazaPodataka {
 	private HashMap<String, Korisnik> korisnici;
 	private HashMap<String, Organizacija> organizacije;
-	private HashMap<String, VM> virtualeMasine;
+	private HashMap<String, VM> virtualneMasine;
 	private HashMap<String, Disk> diskovi;
 	private HashMap<String, KategorijaVM> kategorije;
 	private String putanja;
@@ -13,7 +14,7 @@ public class BazaPodataka {
 	public BazaPodataka() {
 		this.korisnici = new HashMap<String, Korisnik>();
 		this.organizacije = new HashMap<String, Organizacija>();
-		this.virtualeMasine = new HashMap<String, VM>();
+		this.virtualneMasine = new HashMap<String, VM>();
 		this.diskovi = new HashMap<>();
 	} 
 	
@@ -107,14 +108,43 @@ public class BazaPodataka {
 		}
 		return vMasine;
 	}
-	public void dodajVM() {
-		//TODO
+	public boolean unikatnoImeVM(String ime) {
+		if(this.virtualneMasine.containsKey(ime)) 
+			return false;
+		return true;
 	}
-	public void obrisiVM() {
-		//TODO
+	
+	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi) {
+		//ne znam jos kako da proveravam parametre, kako da vracam sta nije dobro
+		//treba razmisliti malo o tome
+		VM vm ;
+		if(unikatnoImeVM(ime)) {
+			vm = new VM(ime,kategorija,diskovi);
+			return "OK";
+		}
+		else {
+			return "Ime VM nije unikatno.";
+			}
+		
 	}
-	public void izmeniVM() {
-		//TODO
+	public void obrisiVM(String ime) {
+		//otkaciti diskove koji su povezani sa VM koja se brise
+		for(Disk d : this.diskovi.values()) {
+			if(d.getVm().getIme().equals(ime)) {
+				d.setVm(null);
+			}
+		}
+		//obrisi VM
+		this.virtualneMasine.remove(ime);
+		}
+	public String izmeniVM(String staroIme,String novoIme) {
+		if(unikatnoImeVM(novoIme)) {
+			this.virtualneMasine.get(staroIme).setIme(novoIme);
+			return "OK";
+		}
+		else {
+			return "Ime VM nije unikatno.";
+		}
 	}
 	
 	public void napuniBazu(){

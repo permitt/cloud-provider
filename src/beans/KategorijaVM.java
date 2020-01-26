@@ -4,6 +4,7 @@ public class KategorijaVM {
 	private String ime;
 	private int brojJezgara;
 	private int RAM;
+	private int GPU;
 	
 	public KategorijaVM() {
 		
@@ -12,8 +13,8 @@ public class KategorijaVM {
 		super();
 		this.ime = ime;
 		this.brojJezgara = brojJezgara;
-		RAM = rAM;
-		GPU = gPU;
+		this.RAM = rAM;
+		this.GPU = gPU;
 	}
 	
 	public String getIme() {
@@ -32,14 +33,13 @@ public class KategorijaVM {
 		return RAM;
 	}
 	public void setRAM(int rAM) {
-		RAM = rAM;
+		this.RAM = rAM;
 	}
 	public int getGPU() {
 		return GPU;
 	}
 	public void setGPU(int gPU) {
-		GPU = gPU;
+		this.GPU = gPU;
 	}
-	private int GPU;
 	
 }

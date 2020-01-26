@@ -11,7 +11,7 @@ public class VM {
 	private int GPU;
 	private ArrayList<Disk> diskovi;
 	private Organizacija organizacija;
-	private ArrayList<Date> listaAktivnosti;
+	private ArrayList<Aktivnost> listaAktivnosti;
 	
 	public VM() {
 		
@@ -26,7 +26,7 @@ public class VM {
 		this.brojJezgara = this.kategorija.getBrojJezgara();
 		this.RAM = this.kategorija.getRAM();
 		this.organizacija = o;
-		this.listaAktivnosti = new ArrayList<Date>();
+		this.listaAktivnosti = new ArrayList<Aktivnost>();
 	}
 	
 	public Organizacija getOrganizacija() {
@@ -37,11 +37,11 @@ public class VM {
 		this.organizacija = organizacija;
 	}
 
-	public ArrayList<Date> getListaAktivnosti() {
+	public ArrayList<Aktivnost> getListaAktivnosti() {
 		return listaAktivnosti;
 	}
 
-	public void setListaAktivnosti(ArrayList<Date> listaAktivnosti) {
+	public void setListaAktivnosti(ArrayList<Aktivnost> listaAktivnosti) {
 		this.listaAktivnosti = listaAktivnosti;
 	}
 

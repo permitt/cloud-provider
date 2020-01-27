@@ -105,8 +105,12 @@ public class BazaPodataka {
 			return "GRESKA";
 		}
 	}
-	
+
+
 	public HashMap<String, VM> dobaviListuVM(Korisnik k){
+		//test
+		if(k==null)
+			return virtualneMasine;
 		//vraca listu vMasina organizacije kojoj korisnik pripada ili ciji je admin
 		HashMap<String, VM> vMasine = new HashMap<String, VM>();
 		Organizacija org = k.getOrganizacija();

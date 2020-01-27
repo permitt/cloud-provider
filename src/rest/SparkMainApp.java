@@ -37,6 +37,10 @@ public class SparkMainApp {
             return res;
         });
 
+        get("/rest/vm/all",(req,res) ->{
+            res.type("application/json");
+            return gson.toJson(bp.dobaviListuVM(null));
+        });
 
         post("rest/users/login",(req,res) ->{
 

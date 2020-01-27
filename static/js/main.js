@@ -1,10 +1,11 @@
 const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
+const VMTabela = { template: '<vm-tabela></vm-tabela>' };
 
 const router = new VueRouter({
     mode: 'hash',
     routes: [
-        { path: '/', component: navBar },
+        { path: '/', component: VMTabela },
         { path: '/login', component: logIn }
     ]
 });
@@ -12,12 +13,28 @@ const router = new VueRouter({
 let app = new Vue({
     router,
     el: '#app',
-    components: {
-        'navbar': navBar,
-        'login': logIn
+    data: {
+        currentUser: null,
     },
+    methods: {
+        init: function () {
+            router.replace("#/login");
+        }
+    },
+    mounted() {
+        axios
+            .get('rest/users/current')
+            .then(response => {
+                this.currentUser = response.data;
+                if (this.currentUser == null)
+                    window.location.replace("#/login");
+            });
+
+    }
+
 
 })
+
 
 
 function loginUser() {

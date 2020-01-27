@@ -36,12 +36,8 @@ public class SparkMainApp {
             return res;
         });
 
-        // Should redirect when not logged in
-        get("/rest/demo",(req,res)->{
-            return "HomePage";
-        });
 
-        post("rest/login",(req,res) ->{
+        post("rest/users/login",(req,res) ->{
 
             String payload = req.body();
             Korisnik k = gson.fromJson(payload,Korisnik.class);
@@ -51,7 +47,7 @@ public class SparkMainApp {
 
 
         // Cisto da se ima
-        get("/rest/demo/logout", (req, res) -> {
+        get("/rest/users/logout", (req, res) -> {
             res.type("application/json");
             Session ss = req.session(true);
             //User user = ss.attribute("user");
@@ -61,5 +57,14 @@ public class SparkMainApp {
 //            }
             return true;
         });
+
+        // Svaka komponenta ce pozivati ovu funkciju nakon mounta, i cuvati u podacima trenutnog korisnika
+        get("/rest/users/current",(req,res)->{
+            res.type("application/json");
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            return gson.toJson(k);
+        });
+
     }
 }

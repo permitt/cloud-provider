@@ -18,11 +18,14 @@ Vue.component('nav-bar', {
         <a class="nav-item nav-link" href="#/korisnici">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
         <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>
-        
+    </div>    
+
+    <div class="navbar-nav ml-auto">
         <a href="#/login" v-if="currentUser == null" class="pull-right btn btn-outline-success my-2 my-sm-0" type="submit">Log in</a>
         <a href="rest/users/logout" v-else class="float-right btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</a>
-    </form>
     </div>
+    
+    
     </div>
     </nav>
 </div>		  

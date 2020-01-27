@@ -1,9 +1,27 @@
+const navBar = { template: '<nav-bar></nav-bar>' };
+const logIn = { template: '<log-in></log-in>' };
+
+const router = new VueRouter({
+    mode: 'hash',
+    routes: [
+        { path: '/', component: navBar },
+        { path: '/login', component: logIn }
+    ]
+});
+
+let app = new Vue({
+    router,
+    el: '#app',
+    components: {
+        'navbar': navBar,
+        'login': logIn
+
+    }
+
+})
 
 
-
-
-
-function login() {
+function loginUser() {
 
     let user = $("#username").val();
     let pw = $("#pw").val();

@@ -1,4 +1,4 @@
-Vue.component("nav-bar", {
+Vue.component('nav-bar', {
     data: function () {
         return {
             currentUser: null,
@@ -6,7 +6,6 @@ Vue.component("nav-bar", {
     },
     template: ` 
 <div>
-	
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Cloud Provider</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,8 +19,8 @@ Vue.component("nav-bar", {
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
         <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>
         
-        <button v-if="currentUser" class="btn btn-outline-success my-2 my-sm-0" type="submit">Log in</button>
-        <button v-else class="btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</button>
+        <a href="#/login" v-if="currentUser == null" class="pull-right btn btn-outline-success my-2 my-sm-0" type="submit">Log in</a>
+        <a href="rest/users/logout" v-else class="float-right btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</a>
     </form>
     </div>
     </div>
@@ -42,3 +41,4 @@ Vue.component("nav-bar", {
             .then(response => (this.currentUser = response.data))
     },
 });
+

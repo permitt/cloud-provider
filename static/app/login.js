@@ -1,54 +1,49 @@
-Vue.component("login", {
+Vue.component('log-in', {
     data: function () {
         return {
-            sc: null,
-            total: 0
+            currentUser: null,
         }
     },
     template: ` 
 <div>
-		Proizvodi u korpi:
-		<table border="1">
-		<tr bgcolor="lightgrey">
-			<th>Naziv</th><th>Jedinicna cena</th><th>Komada</th><th>Ukupna cena</th></tr>
-			<tr v-for="i in sc">
-			<td> {{i.product.name}}</td>
-			<td> {{i.product.price}}</td>
-			<td> {{i.count}} </td>
-			<td> {{i.total}} </td>
-			</tr>
-		</table>
-		<br /> 
-		<button v-on:click="clearSc" >Obriši korpu</button>
-		<p>
-		Ukupno: {{total}} dinara.
-		</p>
-	<p>
-		<a href="#/">Proizvodi</a>
-	</p>
+<h2>Prijava</h2>
+<table>
+    <form id="loginForm">
+        <tr>
+            <td>Korisničko ime</td>
+            <td><input required id="username" type="text" name="txt_username"></td>
+        </tr>
+        <tr>
+            <td>Lozinka</td>
+            <td><input required id="pw" type="password" name="txt_password"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" name="btn_login" value="Prijava" onclick="login()" id="dugme"></td>
+        </tr>
+    </form>
+</table>
+
 	
-</div>		  
-`
+</div>`
     ,
     methods: {
         init: function () {
-            this.sc = {};
-            this.total = 0.0;
+            this.currentUser = null;
+
         },
-        clearSc: function () {
-            if (confirm('Da li ste sigurni?') == true) {
-                axios
-                    .post('rest/proizvodi/clearSc')
-                    .then(response => (this.init()))
-            }
-        }
+        // clearSc: function () {
+        //     if (confirm('Da li ste sigurni?') == true) {
+        //         axios
+        //             .post('rest/proizvodi/clearSc')
+        //             .then(response => (this.init()))
+        //     }
+        // }
     },
     mounted() {
         axios
-            .get('rest/proizvodi/getJustSc')
-            .then(response => (this.sc = response.data));
-        axios
-            .get('rest/proizvodi/getTotal')
-            .then(response => (this.total = response.data));
+            .get('rest/users/current')
+            .then(response => (this.currentUser = response.data));
+
     }
 });

@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class BazaPodataka {
@@ -198,6 +199,15 @@ public class BazaPodataka {
 	}
 
 
+	public Collection<Korisnik> dobaviKorisnike(Korisnik k){
+		// Znaci da je superadmin u pitanju, i vracamo sve korisnike tada
+		if(k == null) {
+			return this.korisnici.values();
+		}
+		// Ako nije superadmin, vracamo samo korisnike koji pripadaju istoj organizaciji kao admin
+		return k.getOrganizacija().getKorisnici();
+
+	}
 
 
 }

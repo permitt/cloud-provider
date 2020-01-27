@@ -23,7 +23,7 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
-        Korisnik superAdmin = new Korisnik("superAdmin@superAdmin.com","superAdmin","Super","Admin",null,"superadmin");
+        Korisnik superAdmin = new Korisnik("superadmin","superadmin","Super","Admin",null,"superadmin");
         bp.dodajKorisnika(superAdmin);
 
 
@@ -80,5 +80,18 @@ public class SparkMainApp {
             return gson.toJson(k);
         });
 
+        get("/rest/users/all",(req,res) ->{
+            res.type("application/json");
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            if(k == null){
+                res.status(403);
+                return res;
+            }
+            if(k.getUloga().equals("superadmin"))
+                return gson.toJson(bp.dobaviKorisnike(null));
+
+            return gson.toJson(bp.dobaviKorisnike(k));
+        });
     }
 }

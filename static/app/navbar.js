@@ -14,7 +14,7 @@ Vue.component('nav-bar', {
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
     <div  class="navbar-nav">
-        <a class="nav-item nav-link" href="">VM <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="#/">VM</a>
         <a class="nav-item nav-link" href="#/korisnici">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
         <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>

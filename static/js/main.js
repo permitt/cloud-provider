@@ -1,25 +1,37 @@
 const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
 const VMTabela = { template: '<vm-tabela></vm-tabela>' };
+const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
+const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
+
+
 
 const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/', component: VMTabela },
+        { path: '/korisnici', component: korisniciTabela },
+        { path: '/korisnici/:email', component: korisniciIzmjena },
         { path: '/login', component: logIn }
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    if (!isAuthenticated() && to.path != "/login") {
+        next('/login');
+    }
+    else
+        next();
 });
 
 let app = new Vue({
     router,
     el: '#app',
+    components: {
+        VMTabela,
+    },
     data: {
         currentUser: null,
-    },
-    methods: {
-        init: function () {
-            router.replace("#/login");
-        }
     },
     mounted() {
         axios
@@ -27,7 +39,7 @@ let app = new Vue({
             .then(response => {
                 this.currentUser = response.data;
                 if (this.currentUser == null)
-                    window.location.replace("#/login");
+                    router.replace("/login");
             });
 
     }
@@ -35,7 +47,15 @@ let app = new Vue({
 
 })
 
+function isAuthenticated() {
 
+    if (app.$data.currentUser == null) {
+        return false;
+    }
+    return true;
+
+
+}
 
 function loginUser() {
 

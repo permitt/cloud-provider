@@ -5,10 +5,9 @@ Vue.component("vm-tabela", {
             VMs: null
         }
     },
-    template: ` 
+    template: `
     <div>
-	
-	<table class="table">
+    <table class="table">
 	<tr bgcolor="lightgrey">
 		<th>Naziv</th>
 		<th>Cena</th>
@@ -43,8 +42,6 @@ Vue.component("vm-tabela", {
             .get('rest/users/current')
             .then(response => {
                 this.currentUser = response.data;
-                if (this.currentUser == null)
-                    window.local.replace("#/login");
             })
         axios
             .get('rest/vm/all')

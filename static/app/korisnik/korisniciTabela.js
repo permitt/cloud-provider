@@ -10,18 +10,19 @@ Vue.component("korisnici-tabela", {
 	
 	<table class="table">
 	<tr bgcolor="lightgrey">
-		<th>Naziv</th>
-		<th>Cena</th>
+		<th>Email</th>
+        <th>Ime</th>
+        <th>Prezime</th>
 		<th>&nbsp;</th>
 	</tr>
 		
-	<tr v-for="p in products">
-		<td>{{p.name }}</td>
-		<td>{{p.price}}</td>
+	<tr v-for="u in users">
+		<td>{{u.email }}</td>
+        <td>{{u.ime}}</td>
+        <td>{{u.prezime}}</td>
 		<td>
-			<input type="number" style="width:40px" size="3" v-model="p.count" name="itemCount"> 
-			<input type="hidden" name="itemId" v-model="p.id"> 
-			<button v-on:click="addToCart(p)">Dodaj</button>
+			<input type="hidden" name="itemId" v-model="u.email"> 
+			<button v-on:click="Edit(u)">Izmjena</button>
 		</td>
 	</tr>
 </table>
@@ -32,15 +33,23 @@ Vue.component("korisnici-tabela", {
 `
     ,
     methods: {
-        addToCart: function (product) {
+        addToCart: function (user) {
             axios
-                .post('rest/proizvodi/add', { "id": '' + product.id, "count": parseInt(product.count) })
-                .then(response => (toast('Product ' + product.name + " added to the Shopping Cart")))
+                .post('rest/IZMEJNAKORISNIKA/add', { "email": '' + user.Email })
+                .then(response => (alert("AAAA")))
+        },
+        Edit: function (user) {
+
         }
     },
     mounted() {
         axios
             .get('rest/users/current')
-            .then(response => (this.currentUser = response.data))
+            .then(response => (this.currentUser = response.data));
+        axios
+            .get('rest/users/all')
+            .then(response => {
+                this.users = response.data;
+            })
     },
 });

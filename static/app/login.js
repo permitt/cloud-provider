@@ -2,26 +2,31 @@ Vue.component('log-in', {
     data: function () {
         return {
             currentUser: null,
+            input: {
+                email: "",
+                password: ""
+            }
         }
     },
-    template: ` 
-<div>
+    template: `
+<div style="margin:150px">
 <h2>Prijava</h2>
-<table>
-    <form id="loginForm">
+
+<table class="table" >
+    
         <tr>
-            <td>Korisničko ime</td>
-            <td><input required id="username" type="text" name="txt_username"></td>
+            <td>E-mail</td>
+            <td><input v-model="input.email" required id="email" type="text" name="txt_email"></td>
         </tr>
         <tr>
             <td>Lozinka</td>
-            <td><input required id="pw" type="password" name="txt_password"></td>
+            <td><input v-model="input.password" required id="pw" type="password" name="txt_password"></td>
         </tr>
         <tr>
             <td></td>
-            <td><input type="button" name="btn_login" value="Prijava" onclick="login()" id="dugme"></td>
+            <td><button v-on:click="logIn">Prijava</button></td>
         </tr>
-    </form>
+
 </table>
 
 	
@@ -30,15 +35,29 @@ Vue.component('log-in', {
     methods: {
         init: function () {
             this.currentUser = null;
-
+            this.input = { email: "", password: "" };
         },
-        // clearSc: function () {
-        //     if (confirm('Da li ste sigurni?') == true) {
-        //         axios
-        //             .post('rest/proizvodi/clearSc')
-        //             .then(response => (this.init()))
-        //     }
-        // }
+        logIn: function () {
+
+            if (this.input.email == "" || this.input.password == "") {
+                alert("Fields must not be empty!");
+                return;
+            }
+            axios.post(
+                'rest/users/login', {
+                email: this.input.email,
+                password: this.input.password
+            }
+            ).then(
+                function (response) {
+                    if (response.data == "OK") {
+                        window.location.replace("/");
+                    } else {
+                        alert(response.data);
+                    }
+                }
+            )
+        }
     },
     mounted() {
         axios

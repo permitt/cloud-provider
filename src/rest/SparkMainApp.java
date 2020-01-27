@@ -4,6 +4,7 @@ import beans.BazaPodataka;
 import beans.Disk;
 import beans.Korisnik;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import spark.Session;
 
 import java.io.File;
@@ -40,7 +41,16 @@ public class SparkMainApp {
         post("rest/users/login",(req,res) ->{
 
             String payload = req.body();
-            Korisnik k = gson.fromJson(payload,Korisnik.class);
+            Session ss = req.session(true);
+            HashMap<String, Object> mapa = gson.fromJson(payload, new TypeToken<HashMap<String, Object>>() {}.getType());
+            String password = mapa.get("password").toString();
+            Korisnik k = bp.nadjiKorisnika(mapa.get("email").toString());
+            if(k == null) {
+                return "User does not exist.";
+            }else if(!k.getPassword().equals(password)){
+                return "Wrong email/password combination.";
+            }
+            ss.attribute("korisnik",k);
 
             return "OK";
         });
@@ -50,11 +60,11 @@ public class SparkMainApp {
         get("/rest/users/logout", (req, res) -> {
             res.type("application/json");
             Session ss = req.session(true);
-            //User user = ss.attribute("user");
-
-//            if (user != null) {
-//                ss.invalidate();
-//            }
+            Korisnik k = ss.attribute("korisnik");
+            System.out.println(k.toString());
+            if (k != null) {
+                ss.invalidate();
+            }
             return true;
         });
 

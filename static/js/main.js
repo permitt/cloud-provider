@@ -15,8 +15,7 @@ let app = new Vue({
     components: {
         'navbar': navBar,
         'login': logIn
-
-    }
+    },
 
 })
 

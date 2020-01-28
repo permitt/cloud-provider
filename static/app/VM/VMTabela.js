@@ -36,13 +36,8 @@ Vue.component("vm-tabela", {
 `
     ,
     methods: {
-        // addToCart: function (product) {
-        //     axios
-        //         .post('rest/proizvodi/add', { "id": '' + product.id, "count": parseInt(product.count) })
-        //         .then(response => (toast('Product ' + product.name + " added to the Shopping Cart")))
-        // }
     	detaljiVM: function(ime) {
-    		 router.replace("/detaljiVM/" + ime);
+    		 router.replace("/vm/" + ime);
 		}
 
     },

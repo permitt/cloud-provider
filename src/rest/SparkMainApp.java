@@ -1,10 +1,10 @@
 package rest;
 
-import beans.BazaPodataka;
-import beans.Disk;
-import beans.Korisnik;
+import beans.*;
 import beans.Organizacija;
+
 import com.google.gson.Gson;
+import beans.Organizacija;
 import com.google.gson.reflect.TypeToken;
 import spark.Session;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static spark.Spark.*;
-
+import beans.VM;
 public class SparkMainApp {
 
     private static Gson gson = new Gson();
@@ -23,9 +23,25 @@ public class SparkMainApp {
     public static void main(String[] args) throws IOException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
+        //PROMENILA SAM
+        Korisnik superAdmin = new Korisnik("super","super","Super","Admin",null,"superadmin");
 
-        Korisnik superAdmin = new Korisnik("superadmin","superadmin","Super","Admin",new Organizacija(),"superadmin");
+
         bp.dodajKorisnika(superAdmin);
+        ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
+        VM vm = new VM();
+        VM vmm = new VM();
+        ArrayList<VM> resu = new ArrayList<VM>();
+        resu.add(vmm);
+        resu.add(vm);
+        Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
+        KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
+        KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
+        ArrayList<Disk> diskovi = new ArrayList<Disk>();
+        VM vm1 = new VM("VM1",kat1,diskovi,o);
+        VM vm2 = new VM("VM2",kat2,diskovi,o);
+        bp.dodajVM(vm1);
+        bp.dodajVM(vm2);
 
 
         get("/",(req,res) ->{
@@ -40,7 +56,16 @@ public class SparkMainApp {
 
         get("/rest/vm/all",(req,res) ->{
             res.type("application/json");
-            return gson.toJson(bp.dobaviListuVM(null));
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            String uloga = k.getUloga();
+
+            if(uloga.equals("superadmin")) {
+                return gson.toJson(bp.dobaviListuVM(null));
+            }
+            else {
+                return gson.toJson(bp.dobaviListuVM(k));
+            }
         });
 
         post("rest/users/login",(req,res) ->{
@@ -86,7 +111,6 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
             if(k == null){
-                // Neulogovan korisnik -> Forbidden 403
                 res.status(403);
                 return res;
             }
@@ -126,5 +150,8 @@ public class SparkMainApp {
 
             return "OK";
         });
+
     }
+
+
 }

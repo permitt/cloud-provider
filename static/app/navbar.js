@@ -18,6 +18,7 @@ Vue.component('nav-bar', {
         <a class="nav-item nav-link" href="#/korisnici">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
         <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>
+        <a class="nav-item nav-link" href="#/organizacije">Organizacije</a>
     </div>    
 
     <div class="navbar-nav ml-auto">

@@ -72,7 +72,9 @@ public class BazaPodataka {
 
 
 
-
+	public void dodajKategoriju(KategorijaVM k) {
+		this.kategorije.put(k.getIme(), k);
+	}
 	public String dodajOrganizaciju(Organizacija o) {
 		if(nadjiOrganizaciju(o.getIme())==null) {
 			this.organizacije.put(o.getIme(), o);
@@ -204,13 +206,14 @@ public class BazaPodataka {
 		//obrisi VM
 		this.virtualneMasine.remove(ime);
 		}
-	public String izmeniVM(String staroIme,String novoIme) {
-		if(unikatnoImeVM(novoIme)) {
-			this.virtualneMasine.get(staroIme).setIme(novoIme);
+	public String izmeniVM(VM novaVM,String staroIme) {
+		if(unikatnoImeVM(novaVM.getIme())) {
+			this.virtualneMasine.get(staroIme).setIme(novaVM.getIme());
+			this.virtualneMasine.get(novaVM.getIme()).setKategorija(novaVM.getKategorija());
 			return "OK";
 		}
 		else {
-			return "Ime VM nije unikatno.";
+			return "EROR";
 		}
 	}
 	public void promeniListuAktivnostiVM(String imeVM) {

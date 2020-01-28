@@ -48,7 +48,7 @@ Vue.component("vm-tabela", {
                 this.currentUser = response.data;
             })
         axios
-            .get('rest/vm/getVMs')
+            .get('rest/vm/all')
             .then(response => { this.VMs = response.data; console.log(response.data) });
     },
 });

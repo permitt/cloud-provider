@@ -47,6 +47,8 @@ public class SparkMainApp {
         Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
         KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
         KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
+        bp.dodajKategoriju(kat2);
+        bp.dodajKategoriju(kat1);
         ArrayList<Disk> diskovi = new ArrayList<Disk>();
         VM vm1 = new VM("VM1",kat1,diskovi,o);
         VM vm2 = new VM("VM2",kat2,diskovi,o);
@@ -63,7 +65,6 @@ public class SparkMainApp {
 
             return res;
         });
-
         get("/rest/vm/all",(req,res) ->{
             res.type("application/json");
             Session ss = req.session(true);
@@ -77,6 +78,20 @@ public class SparkMainApp {
                 return gson.toJson(bp.dobaviListuVM(k));
             }
         });
+
+        get("/rest/vm/:ime",(req,res) ->{
+            res.type("application/json");
+            String ime = req.params("ime");
+            return gson.toJson(bp.getVirtualneMasine().get(ime));
+            
+        });
+        
+        get("/rest/kategorija/all",(req,res) ->{
+            res.type("application/json");
+            return gson.toJson(bp.getKategorije().values());
+            
+        });
+        
 
         post("rest/users/login",(req,res) ->{
 
@@ -175,6 +190,20 @@ public class SparkMainApp {
 
             return "OK";
         });
+
+        post("/rest/vm/:imeVM",(req,res)->{
+           
+            String param = req.params("imeVM");
+
+            String payload = req.body();
+            VM vmasina = gson.fromJson(payload,VM.class);
+
+            if(bp.izmeniVM(vmasina, param).equals("OK"))
+            	return "OK";
+            return "Failed";
+        
+        });
+        
 
         delete("/rest/users/:email",(req,res)->{
             Session ss = req.session(true);

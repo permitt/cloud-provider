@@ -5,7 +5,6 @@ const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
 
 
-
 const router = new VueRouter({
     mode: 'hash',
     routes: [

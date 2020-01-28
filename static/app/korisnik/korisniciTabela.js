@@ -6,10 +6,10 @@ Vue.component("korisnici-tabela", {
         }
     },
     template: ` 
-<div>
-	
-	<table class="table">
-	<tr bgcolor="lightgrey">
+<div class="container">
+	<div class="col-lg-8 mx-auto" style="margin-top:30px">
+	<table class="table table-dark">
+	<tr bgcolor="">
 		<th>Email</th>
         <th>Ime</th>
         <th>Prezime</th>
@@ -22,34 +22,33 @@ Vue.component("korisnici-tabela", {
         <td>{{u.prezime}}</td>
 		<td>
 			<input type="hidden" name="itemId" v-model="u.email"> 
-			<button v-on:click="Edit(u)">Izmjena</button>
+			<button v-on:click="edit(u)">Izmjena</button>
 		</td>
 	</tr>
 </table>
 	<p>
 		<a class="btn btn-outline-primary" href="#/dodajKorisnika">Dodaj korisnika</a>
-	</p>
+    </p>
+    </div>
 </div>		  
 `
     ,
     methods: {
-        addToCart: function (user) {
-            axios
-                .post('rest/IZMEJNAKORISNIKA/add', { "email": '' + user.Email })
-                .then(response => (alert("AAAA")))
-        },
-        Edit: function (user) {
-
+        edit(user) {
+            router.replace("/korisnici/" + user.email);
         }
+
     },
     mounted() {
         axios
             .get('rest/users/current')
-            .then(response => (this.currentUser = response.data));
+            .then(response => (this.currentUser = response.data))
+            .catch(e => console.log(e.response));
         axios
             .get('rest/users/all')
             .then(response => {
                 this.users = response.data;
             })
+            .catch(e => console.log(e.response));
     },
 });

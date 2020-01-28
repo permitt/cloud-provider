@@ -6,7 +6,8 @@ Vue.component("vm-tabela", {
         }
     },
     template: `
-    <div>
+    <div class="container">
+    <div class="col-lg-8 mx-auto" style="margin-top:30px">
     <table class="table">
 	<tr bgcolor="lightgrey">
 		<th>Naziv</th>
@@ -26,7 +27,8 @@ Vue.component("vm-tabela", {
 </table>
 	<p>
 		<a class="btn btn-outline-primary" href="#/dodajVM">Dodaj VM</a>
-	</p>
+    </p>
+    </div>
 </div>		  	  
 `
     ,

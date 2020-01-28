@@ -11,7 +11,7 @@ public class Organizacija {
 	private ArrayList<VM> resursi;
 	
 	public Organizacija() {
-		
+		this.ime= "NLB banka";
 	}
 	
 	public Organizacija(String ime, String opis, String logo, ArrayList<Korisnik> korisnici, ArrayList<VM> resursi) {

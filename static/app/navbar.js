@@ -21,8 +21,9 @@ Vue.component('nav-bar', {
     </div>    
 
     <div class="navbar-nav ml-auto">
-        <a href="#/login" v-if="currentUser == null" class="pull-right btn btn-outline-success my-2 my-sm-0" type="submit">Log in</a>
-        <a href="rest/users/logout" v-else class="float-right btn btn-outline-danger my-2 my-sm-0" type="submit">Log out</a>
+        <a href="#/profile" class="btn btn-outline-primary my-2 my-sm-0" type="submit" style="margin-right:10px">Profile</a>
+        <a href="#/login" v-if="currentUser == null" class=" btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-right:10px">Log in</a>
+        <a href="rest/users/logout" v-else class="btn btn-outline-danger my-2 my-sm-0" type="submit" style="margin-right:10px">Log out</a>
     </div>
     
     

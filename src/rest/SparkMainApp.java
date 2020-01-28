@@ -3,6 +3,7 @@ package rest;
 import beans.BazaPodataka;
 import beans.Disk;
 import beans.Korisnik;
+import beans.Organizacija;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import spark.Session;
@@ -23,7 +24,7 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
 
-        Korisnik superAdmin = new Korisnik("superadmin","superadmin","Super","Admin",null,"superadmin");
+        Korisnik superAdmin = new Korisnik("superadmin","superadmin","Super","Admin",new Organizacija(),"superadmin");
         bp.dodajKorisnika(superAdmin);
 
 
@@ -85,6 +86,7 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
             if(k == null){
+                // Neulogovan korisnik -> Forbidden 403
                 res.status(403);
                 return res;
             }
@@ -92,6 +94,37 @@ public class SparkMainApp {
                 return gson.toJson(bp.dobaviKorisnike(null));
 
             return gson.toJson(bp.dobaviKorisnike(k));
+        });
+
+        get("/rest/users/:email",(req,res) ->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+
+            // Ako nema pristup, vratiti kod 403 Forbidden
+            String param = req.params("email");
+            Korisnik k = bp.nadjiKorisnika(param);
+            if(k == null){
+                res.status(400);
+                res.body("User with that email was not found.");
+                return res;
+            }
+
+            res.type("application/json");
+            if(ulogovan.getUloga().equals("admin") && k.getOrganizacija().getIme().equals(ulogovan.getOrganizacija().getIme())){
+                return gson.toJson(k);
+            }else if(ulogovan.getUloga().equals("superadmin")){
+                return gson.toJson(k);
+            }else{
+                res.status(403);
+                return res;
+            }
+
+        });
+
+        post("/rest/users/",(req,res)->{
+
+
+            return "OK";
         });
     }
 }

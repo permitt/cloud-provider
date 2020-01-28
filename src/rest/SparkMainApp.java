@@ -65,6 +65,7 @@ public class SparkMainApp {
 
             return res;
         });
+
         get("/rest/vm/all",(req,res) ->{
             res.type("application/json");
             Session ss = req.session(true);
@@ -83,15 +84,30 @@ public class SparkMainApp {
             res.type("application/json");
             String ime = req.params("ime");
             return gson.toJson(bp.getVirtualneMasine().get(ime));
-            
+
         });
-        
+
         get("/rest/kategorija/all",(req,res) ->{
             res.type("application/json");
             return gson.toJson(bp.getKategorije().values());
-            
+
         });
-        
+
+
+        get("/rest/organizacija/all",(req,res)->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            res.type("application/json");
+            if(ulogovan.getUloga().equals("superadmin")){
+                return gson.toJson(bp.dobaviOrganizacije());
+            }else if(ulogovan.getUloga().equals("admin")){
+                return gson.toJson(ulogovan.getOrganizacija());
+            }else{
+                res.status(403);
+                return res;
+            }
+
+        });
 
         post("rest/users/login",(req,res) ->{
 
@@ -169,14 +185,21 @@ public class SparkMainApp {
 
         });
 
-        post("/rest/users/:email",(req,res)->{
+        put("/rest/users/:email",(req,res)->{
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");
             String param = req.params("email");
 
+
             String payload = req.body();
             Korisnik k = gson.fromJson(payload,Korisnik.class);
+            //Provjera da li je mijenjan mejl i da li je unikatan
+            if(!k.getEmail().equals(param) && !bp.unikatanMejlKorisnika(k.getEmail())){
+                res.status(400);
+                return res;
+            }
 
+            // Admin  moze mijenjati samo iz svoje organizacije
             boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(k.getOrganizacija().getIme());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
@@ -187,12 +210,15 @@ public class SparkMainApp {
 
             if(!bp.izmjeniKorisnika(param,k))
                 return "Failed";
-
+            //Ako je korisnik mijenjao svoj profil, moramo i azurirati sesiju
+            if(ulogovan.getEmail().equals(param)) {
+                ulogovan.setEmail(k.getEmail());
+            }
             return "OK";
         });
 
         post("/rest/vm/:imeVM",(req,res)->{
-           
+
             String param = req.params("imeVM");
 
             String payload = req.body();
@@ -201,9 +227,22 @@ public class SparkMainApp {
             if(bp.izmeniVM(vmasina, param).equals("OK"))
             	return "OK";
             return "Failed";
-        
+
         });
-        
+
+        post("/rest/users",(req,res)->{
+           Session ss = req.session(true);
+           Korisnik ulogovan = ss.attribute("korisnik");
+           String payload = req.body();
+           Korisnik novi = gson.fromJson(payload,Korisnik.class);
+           if(!bp.unikatanMejlKorisnika(novi.getEmail())){
+               res.status(400);
+               return res;
+           }
+
+           bp.dodajKorisnika(novi);
+            return "OK";
+        });
 
         delete("/rest/users/:email",(req,res)->{
             Session ss = req.session(true);

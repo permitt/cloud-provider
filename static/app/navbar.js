@@ -1,7 +1,7 @@
 Vue.component('nav-bar', {
     data: function () {
         return {
-            currentUser: null,
+            currentUser: { uloga: "korisnik", email: "" },
         }
     },
     template: ` 
@@ -15,14 +15,14 @@ Vue.component('nav-bar', {
 
     <div  class="navbar-nav">
         <a class="nav-item nav-link" href="#/">VM</a>
-        <a class="nav-item nav-link" href="#/korisnici">Korisnici</a>
+        <a class="nav-item nav-link" href="#/korisnici" v-if="currentUser.uloga != 'korisnik'">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
-        <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>
+        <a class="nav-item nav-link" href="#/kategorije" v-if="currentUser.uloga == 'superadmin'">Kategorije</a>
     </div>    
 
     <div class="navbar-nav ml-auto">
-        <a href="#/profile" class="btn btn-outline-primary my-2 my-sm-0" type="submit" style="margin-right:10px">Profile</a>
-        <a href="#/login" v-if="currentUser == null" class=" btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-right:10px">Log in</a>
+        <a href="#/profil" class="btn btn-outline-primary my-2 my-sm-0" type="submit" style="margin-right:10px">Profil</a>
+        <a href="#/login" v-if="currentUser.email == ''" class=" btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-right:10px">Log in</a>
         <button v-on:click="logout()" v-else class="btn btn-outline-danger my-2 my-sm-0" type="submit" style="margin-right:10px">Log out</button>
     </div>
     
@@ -43,7 +43,7 @@ Vue.component('nav-bar', {
                 .post("/rest/users/logout")
                 .then(response => {
                     if (response.data == "OK") {
-                        this.currentUser = null;
+                        this.currentUser = { uloga: "korisnik", email: "" };
                         this.$parent.currentUser = null;
                         router.replace("/login");
                     }

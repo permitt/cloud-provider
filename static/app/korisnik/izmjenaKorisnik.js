@@ -35,6 +35,12 @@ Vue.component('korisnici-izmjena', {
     <label for="ime">Ime</label>
     <input type="text" class="form-control" id="ime" v-model="userToEdit.ime" required>
     </div>
+
+    <div class="form-group">
+    <label for="prezime">Prezime</label>
+    <input type="text" class="form-control" id="prezime" v-model="userToEdit.prezime" required>
+    </div>
+
     <div class="form-group">
         <label for="ime">Password</label>
         <input type="password" class="form-control" id="pw" v-model="userToEdit.password" required>
@@ -52,8 +58,8 @@ Vue.component('korisnici-izmjena', {
         <option>korisnik</option>
     </select>
     </div>
-    <button type="submit" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
-    <button v-on:click="izbrisi()" type="submit" class="btn btn-danger">Obrisi</button>
+    <button type="button" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
+    <button v-on:click="izbrisi()" type="button" class="btn btn-danger">Obrisi</button>
     </form>
 
 
@@ -81,7 +87,7 @@ Vue.component('korisnici-izmjena', {
 
             console.log(JSON.stringify(this.userToEdit));
             axios
-                .post("/rest/users/" + this.email, JSON.stringify(this.userToEdit))
+                .put("/rest/users/" + this.email, JSON.stringify(this.userToEdit))
                 .then(response => {
                     if (response.data == "OK")
                         router.replace("/korisnici");

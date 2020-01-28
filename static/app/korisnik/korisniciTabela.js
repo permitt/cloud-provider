@@ -27,7 +27,7 @@ Vue.component("korisnici-tabela", {
 	</tr>
 </table>
 	<p>
-		<a class="btn btn-outline-primary" href="#/dodajKorisnika">Dodaj korisnika</a>
+		<a class="btn btn-outline-primary" href="#/korisnici/novi">Dodaj korisnika</a>
     </p>
     </div>
 </div>		  

@@ -1,8 +1,7 @@
-Vue.component('novi-korisnik', {
+Vue.component('profil', {
     data: function () {
         return {
-            currentUser: null,
-            userToAdd: {
+            currentUser: {
                 ime: "",
                 prezime: "",
                 email: "",
@@ -10,57 +9,46 @@ Vue.component('novi-korisnik', {
                 organizacija: "",
                 password: ""
             },
+            email: "",
             passwordError: false,
             emailError: false,
-            roleError: false,
-            orgError: false,
             firstNameError: false,
             lastNameError: false,
             passwordShortError: false,
             password2: "",
-            organizacije: "",
+
         };
     },
     template: `
         
 <div class="container">
 <div class="col-lg-8 mx-auto" style="margin-top:30px">
-    <h3>Unos novog korisnika</h3>
-
-
-    <form class="needs-validation novalidate" @onSubmit="dodaj"> 
+    <h3>Izmjena profila</h3>
+    <form class="needs-validation novalidate">
     <div class="form-group">
         <label for="exampleInputEmail1">Email adresa</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="userToAdd.email" required>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" v-model="currentUser.email" required>
         <small style="color:red" v-if="emailError">Morate unijeti validan mejl! (a@b.c) </small>
 
       </div>
 
-    <div class="form-group">
-    <label for="organizacija">Organizacija</label>
-    <select v-for="o in organizacije" v-model="userToAdd.organizacija" class="form-control" required>
-        <option>{{o.ime}}</option>
-    </select>
-    <small style="color:red" v-if="orgError">Morate odabrati organizaciju!</small>
-        
-    </div>
 
     <div class="form-group">
     <label for="ime">Ime</label>
-    <input type="text" class="form-control" id="ime" v-model="userToAdd.ime" required>
+    <input type="text" class="form-control" id="ime" v-model="currentUser.ime" required>
     <small style="color:red" v-if="firstNameError">Morate unijeti ime!</small>
     </div>
 
     <div class="form-group">
     <label for="prezime">Prezime</label>
-    <input type="text" class="form-control" id="prezime" v-model="userToAdd.prezime" required>
+    <input type="text" class="form-control" id="prezime" v-model="currentUser.prezime" required>
     <small style="color:red" v-if="lastNameError">Morate unijeti prezime!</small>
 
     </div>
 
     <div class="form-group">
         <label for="pw">Password</label>
-        <input type="password" class="form-control" id="pw" v-model="userToAdd.password" required>
+        <input type="password" class="form-control" id="pw" v-model="currentUser.password" required>
         <small style="color:red" v-if="passwordShortError">Lozinka ne moze biti kraca od 6 karaktera!</small>
 
     </div>
@@ -69,18 +57,9 @@ Vue.component('novi-korisnik', {
         <input type="password" class="form-control" id="pw2" v-model="password2" required>
         <small style="color:red" v-if="passwordError">Lozinke se ne poklapaju!</small>
     </div>
-    <div class="form-group">
-    <label for="uloga">Uloga</label>
-    
-    <select v-model="userToAdd.uloga" class="form-control" required>
-        <option>admin</option>
-        <option>korisnik</option>
-    </select>
-    <small style="color:red" v-if="roleError">Morate odabrati ulogu!</small>
-    </div>
-    
 
-    <button class="btn btn-primary" v-on:click="dodaj()" type="button">Dodaj</button>
+    
+    <button type="button" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
     </form>
 
 
@@ -102,8 +81,6 @@ Vue.component('novi-korisnik', {
             this.emailError = false;
             this.passwordError = false;
             this.passwordShortError = false;
-            this.roleError = false;
-            this.orgError = false;
 
         }
         ,
@@ -112,32 +89,24 @@ Vue.component('novi-korisnik', {
             this.resetErrors();
             let valid = true;
 
-            if (this.password2 !== this.userToAdd.password) {
+            if (this.password2 !== this.currentUser.password) {
                 this.passwordError = true;
                 valid = false;
             }
-            if (this.userToAdd.email == "" || !this.validateEmail(this.userToAdd.email)) {
+            if (this.currentUser.email == "" || !this.validateEmail(this.currentUser.email)) {
                 this.emailError = true;
                 valid = false;
             }
 
-            if (this.userToAdd.ime == "") {
+            if (this.currentUser.ime == "") {
                 this.firstNameError = true;
                 valid = false;
             }
-            if (this.userToAdd.prezime == "") {
+            if (this.currentUser.prezime == "") {
                 this.lastNameError = true;
                 valid = false;
             }
-            if (this.userToAdd.uloga == "") {
-                this.roleError = true;
-                valid = false;
-            }
-            if (this.userToAdd.organizacija == "") {
-                this.orgError = true;
-                valid = false;
-            }
-            if (this.userToAdd.password.length < 6) {
+            if (this.currentUser.password.length < 6) {
                 this.passwordShortError = true;
                 valid = false;
             }
@@ -145,41 +114,31 @@ Vue.component('novi-korisnik', {
             return valid;
 
         },
-        dodaj() {
-
+        sacuvaj() {
 
             if (!this.formValid())
                 return;
 
-            this.organizacije.map(el => {
-                if (el.ime == this.userToAdd.organizacija)
-                    this.userToAdd.organizacija = el;
-            })
-
+            console.log(JSON.stringify(this.currentUser));
             axios
-                .post("/rest/users", JSON.stringify(this.userToAdd))
+                .put("/rest/users/" + this.email, JSON.stringify(this.currentUser))
                 .then(response => {
                     if (response.data == "OK")
                         router.replace("/korisnici");
                 }).catch(e => {
-                    console.log(e.response);
+                    if (e.response.status == 400)
+                        alert("Korisnik s tim mejlom vec postoji.");
                 });
         },
-
     },
+
+
     mounted() {
 
         axios.get('rest/users/current')
             .then(response => {
                 this.currentUser = response.data;
-            });
-        axios.get('rest/organizacija/all')
-            .then((response) => {
-                this.organizacije = response.data;
-            })
-            .catch((error) => {
-                if (error.response.status == 400)
-                    alert("Nemate privilegije za to.");
+                this.email = response.data.email;
             });
     }
 });

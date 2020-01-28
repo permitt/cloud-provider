@@ -94,7 +94,10 @@ public class BazaPodataka {
 		else
 			return null;
 	}
-	
+
+	public Collection<Organizacija> dobaviOrganizacije(){
+		return this.organizacije.values();
+	}
 	
 	public String izmeniOrganizaciju(String ime,String opis,String logo) {
 		String poruka = "Uspesna izmena!";
@@ -256,17 +259,20 @@ public class BazaPodataka {
 //		if(!this.organizacije.containsKey(k.getOrganizacija().getIme()))
 //			return false;
 //		Organizacija org = this.organizacije.get(k.getOrganizacija().getIme());
-
+		organizacije.get(k.getOrganizacija().getIme()).dodajKorisnika(k);
 		korisnici.put(k.getEmail(),k);
 		return true;
 	}
 
 	public boolean izmjeniKorisnika(String email,Korisnik k){
 		Korisnik korisnik = this.nadjiKorisnika(email);
+		korisnik.setEmail(k.getEmail());
 		korisnik.setIme(k.getIme());
 		korisnik.setPrezime(k.getPrezime());
 		korisnik.setPassword(k.getPassword());
 		korisnik.setUloga(k.getUloga());
+		this.korisnici.remove(email);
+		this.korisnici.put(korisnik.getEmail(),korisnik);
 		return true;
 
 	}

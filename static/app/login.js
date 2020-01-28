@@ -51,6 +51,8 @@ Vue.component('log-in', {
             ).then(
                 function (response) {
                     if (response.data == "OK") {
+
+
                         window.location.replace("/");
                     } else {
                         alert(response.data);

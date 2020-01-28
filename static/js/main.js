@@ -1,29 +1,26 @@
 const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
 const VMTabela = { template: '<vm-tabela></vm-tabela>' };
-const VMdetalji = { template: '<vm-detalji></vm-detalji>'};
+const VMdetalji = { template: '<vm-detalji></vm-detalji>' };
 const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
-
+const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
+const profil = { template: '<profil></profil>' };
 
 const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/', component: VMTabela },
-        { path: '/vm/:ime',component : VMdetalji},
+        { path: '/vm/:ime', component: VMdetalji },
         { path: '/korisnici', component: korisniciTabela },
+        { path: '/korisnici/novi', component: noviKorisnik },
         { path: '/korisnici/:email', component: korisniciIzmjena },
+        { path: '/profil', component: profil },
         { path: '/login', component: logIn }
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    if (!isAuthenticated() && to.path != "/login") {
-        next('/login');
-    }
-    else
-        next();
-});
+
 
 let app = new Vue({
     router,
@@ -48,15 +45,14 @@ let app = new Vue({
 
 })
 
-function isAuthenticated() {
-
-    if (app.$data.currentUser == null) {
-        return false;
+router.beforeEach((to, from, next) => {
+    if (app.$data.currentUser == null && to.path != "/login") {
+        next('/login');
     }
-    return true;
+    else
+        next();
+});
 
-
-}
 
 function loginUser() {
 

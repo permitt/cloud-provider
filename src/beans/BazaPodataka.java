@@ -249,10 +249,34 @@ public class BazaPodataka {
 		return null;
 	}
 
-	public void dodajKorisnika(Korisnik k){
+	public boolean dodajKorisnika(Korisnik k){
+//		if(!this.organizacije.containsKey(k.getOrganizacija().getIme()))
+//			return false;
+//		Organizacija org = this.organizacije.get(k.getOrganizacija().getIme());
+
 		korisnici.put(k.getEmail(),k);
+		return true;
 	}
 
+	public boolean izmjeniKorisnika(String email,Korisnik k){
+		Korisnik korisnik = this.nadjiKorisnika(email);
+		korisnik.setIme(k.getIme());
+		korisnik.setPrezime(k.getPrezime());
+		korisnik.setPassword(k.getPassword());
+		korisnik.setUloga(k.getUloga());
+		return true;
+
+	}
+
+	public boolean izbrisiKorisnika(String email){
+		if(!this.korisnici.containsKey(email))
+			return false;
+		Korisnik k = this.korisnici.get(email);
+		k.getOrganizacija().getKorisnici().remove(k);
+		this.korisnici.remove(email);
+		return true;
+
+	}
 
 	public Collection<Korisnik> dobaviKorisnike(Korisnik k){
 		// Znaci da je superadmin u pitanju, i vracamo sve korisnike tada

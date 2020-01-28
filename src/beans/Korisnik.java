@@ -65,6 +65,8 @@ public class Korisnik {
         this.uloga = uloga;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Ime: " + this.ime + ", prezime: " + this.prezime + ",uloga: "+this.uloga + ",organizacija: "+this.organizacija.getIme() ;
+    }
 }

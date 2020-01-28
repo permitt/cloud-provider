@@ -26,7 +26,6 @@ public class SparkMainApp {
         //PROMENILA SAM
         Korisnik superAdmin = new Korisnik("super","super","Super","Admin",null,"superadmin");
 
-
         bp.dodajKorisnika(superAdmin);
         ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
         VM vm = new VM();
@@ -54,7 +53,7 @@ public class SparkMainApp {
             return res;
         });
 
-        get("/rest/vm/all",(req,res) ->{
+        get("/rest/vm/getVMs",(req,res) ->{
             res.type("application/json");
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");

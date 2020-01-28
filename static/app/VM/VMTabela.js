@@ -19,6 +19,9 @@ Vue.component("vm-tabela", {
 	<tr v-for="vm in VMs">
 		<td>{{vm.ime}}</td>
 		<td>{{vm.brojJezgara}}</td>
+		<td>{{vm.RAM}}</td>
+		<td>{{vm.GPU}}</td>
+		<td>{{vm.organizacija.ime}}</td>
 	</tr>
 </table>
 	<p>

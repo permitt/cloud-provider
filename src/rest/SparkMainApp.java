@@ -27,7 +27,7 @@ public class SparkMainApp {
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         //PROMENILA SAM
         Korisnik superAdmin = new Korisnik("super","super","Super","Admin",null,"superadmin");
-       
+        
        
         bp.dodajKorisnika(superAdmin);
         ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
@@ -37,10 +37,11 @@ public class SparkMainApp {
         resu.add(vmm);
         resu.add(vm);
         Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
-        KategorijaVM kat = new KategorijaVM("KAT1",5,8,3);
+        KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
+        KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
         ArrayList<Disk> diskovi = new ArrayList<Disk>();
-        VM vm1 = new VM("VM1",kat,diskovi,o);
-        VM vm2 = new VM("VM2",kat,diskovi,o);
+        VM vm1 = new VM("VM1",kat1,diskovi,o);
+        VM vm2 = new VM("VM2",kat2,diskovi,o);
         bp.dodajVM(vm1);
         bp.dodajVM(vm2);
         
@@ -60,7 +61,7 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
             String uloga = k.getUloga();
-            System.out.println(uloga);
+            
             if(uloga.equals("superadmin")) {
             	return gson.toJson(bp.dobaviListuVM(null));
             }

@@ -8,22 +8,25 @@ Vue.component("vm-tabela", {
     template: `
     <div class="container">
     <div class="col-lg-8 mx-auto" style="margin-top:30px">
-    <table class="table">
+    <table class="table table-hover">
+	<thead>
 	<tr bgcolor="lightgrey">
-		<th>Naziv</th>
-		<th>Cena</th>
-		<th>&nbsp;</th>
+		<th>Ime</th>
+		<th>Broj jezgara</th>
+		<th>RAM</th>
+		<th>GPU</th>
+		<th>Organizacija</th>
 	</tr>
-		
-	<tr v-for="p in VMs">
-		<td>{{p.name }}</td>
-		<td>{{p.price}}</td>
-		<td>
-			<input type="number" style="width:40px" size="3" v-model="p.count" name="itemCount"> 
-			<input type="hidden" name="itemId" v-model="p.id"> 
-			<button v-on:click="addToCart(p)">Dodaj</button>
-		</td>
+	</thead>
+	<tbody>	
+	<tr v-for="vm in VMs" v-on:click="detaljiVM(vm.ime)">
+		<td>{{vm.ime}}</td>
+		<td>{{vm.brojJezgara}}</td>
+		<td>{{vm.RAM}}</td>
+		<td>{{vm.GPU}}</td>
+		<td>{{vm.organizacija.ime}}</td>
 	</tr>
+	</tbody>
 </table>
 	<p>
 		<a class="btn btn-outline-primary" href="#/dodajVM">Dodaj VM</a>
@@ -38,6 +41,10 @@ Vue.component("vm-tabela", {
         //         .post('rest/proizvodi/add', { "id": '' + product.id, "count": parseInt(product.count) })
         //         .then(response => (toast('Product ' + product.name + " added to the Shopping Cart")))
         // }
+    	detaljiVM: function(ime) {
+    		 router.replace("/detaljiVM/" + ime);
+		}
+
     },
     mounted() {
         axios
@@ -46,7 +53,7 @@ Vue.component("vm-tabela", {
                 this.currentUser = response.data;
             })
         axios
-            .get('rest/vm/all')
+            .get('rest/vm/getVMs')
             .then(response => { this.VMs = response.data; console.log(response.data) });
     },
 });

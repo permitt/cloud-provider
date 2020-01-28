@@ -85,7 +85,6 @@ public class SparkMainApp {
             HashMap<String, Object> mapa = gson.fromJson(payload, new TypeToken<HashMap<String, Object>>() {}.getType());
             String password = mapa.get("password").toString();
             Korisnik k = bp.nadjiKorisnika(mapa.get("email").toString());
-
             if(k == null) {
                 return "User does not exist.";
             }else if(!k.getPassword().equals(password)){

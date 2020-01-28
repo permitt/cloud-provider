@@ -18,13 +18,12 @@ Vue.component('nav-bar', {
         <a class="nav-item nav-link" href="#/korisnici">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
         <a class="nav-item nav-link" href="#/kategorije">Kategorije</a>
-        <a class="nav-item nav-link" href="#/organizacije">Organizacije</a>
     </div>    
 
     <div class="navbar-nav ml-auto">
         <a href="#/profile" class="btn btn-outline-primary my-2 my-sm-0" type="submit" style="margin-right:10px">Profile</a>
         <a href="#/login" v-if="currentUser == null" class=" btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-right:10px">Log in</a>
-        <a href="rest/users/logout" v-else class="btn btn-outline-danger my-2 my-sm-0" type="submit" style="margin-right:10px">Log out</a>
+        <button v-on:click="logout()" v-else class="btn btn-outline-danger my-2 my-sm-0" type="submit" style="margin-right:10px">Log out</button>
     </div>
     
     
@@ -39,6 +38,17 @@ Vue.component('nav-bar', {
         //         .post('rest/proizvodi/add', { "id": '' + product.id, "count": parseInt(product.count) })
         //         .then(response => (toast('Product ' + product.name + " added to the Shopping Cart")))
         // }
+        logout() {
+            axios
+                .post("/rest/users/logout")
+                .then(response => {
+                    if (response.data == "OK") {
+                        this.currentUser = null;
+                        this.$parent.currentUser = null;
+                        router.replace("/login");
+                    }
+                })
+        }
     },
     mounted() {
         axios

@@ -7,11 +7,12 @@ public class Organizacija {
 	private String ime;
 	private String opis;
 	private String logo;
-	private ArrayList<Korisnik> korisnici;
+	private transient ArrayList<Korisnik> korisnici;
 	private ArrayList<VM> resursi;
 	
 	public Organizacija() {
 		this.ime= "NLB banka";
+		this.korisnici = new ArrayList<>();
 	}
 	
 	public Organizacija(String ime, String opis, String logo, ArrayList<Korisnik> korisnici, ArrayList<VM> resursi) {
@@ -54,5 +55,12 @@ public class Organizacija {
 	}
 	public void setResursi(ArrayList<VM> resursi) {
 		this.resursi = resursi;
+	}
+
+	public void dodajKorisnika(Korisnik k){
+		if(this.korisnici.contains(k))
+			return;
+		this.korisnici.add(k);
+
 	}
 }

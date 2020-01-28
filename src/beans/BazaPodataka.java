@@ -11,7 +11,9 @@ public class BazaPodataka {
 	private HashMap<String, Disk> diskovi;
 	private HashMap<String, KategorijaVM> kategorije;
 	private String putanja;
+	
 
+	 
 	public BazaPodataka() {
 		this.korisnici = new HashMap<String, Korisnik>();
 		this.organizacije = new HashMap<String, Organizacija>();
@@ -20,6 +22,57 @@ public class BazaPodataka {
 		this.kategorije = new HashMap<String, KategorijaVM>();
 	} 
 	
+	public HashMap<String, Korisnik> getKorisnici() {
+		return korisnici;
+	}
+
+	public void setKorisnici(HashMap<String, Korisnik> korisnici) {
+		this.korisnici = korisnici;
+	}
+
+	public HashMap<String, Organizacija> getOrganizacije() {
+		return organizacije;
+	}
+
+	public void setOrganizacije(HashMap<String, Organizacija> organizacije) {
+		this.organizacije = organizacije;
+	}
+
+	public HashMap<String, VM> getVirtualneMasine() {
+		return virtualneMasine;
+	}
+
+	public void setVirtualneMasine(HashMap<String, VM> virtualneMasine) {
+		this.virtualneMasine = virtualneMasine;
+	}
+
+	public HashMap<String, Disk> getDiskovi() {
+		return diskovi;
+	}
+
+	public void setDiskovi(HashMap<String, Disk> diskovi) {
+		this.diskovi = diskovi;
+	}
+
+	public HashMap<String, KategorijaVM> getKategorije() {
+		return kategorije;
+	}
+
+	public void setKategorije(HashMap<String, KategorijaVM> kategorije) {
+		this.kategorije = kategorije;
+	}
+
+	public String getPutanja() {
+		return putanja;
+	}
+
+	public void setPutanja(String putanja) {
+		this.putanja = putanja;
+	}
+
+
+
+
 	public String dodajOrganizaciju(Organizacija o) {
 		if(nadjiOrganizaciju(o.getIme())==null) {
 			this.organizacije.put(o.getIme(), o);
@@ -107,7 +160,9 @@ public class BazaPodataka {
 		}
 	}
 
-
+	public void dodajVM(VM vm) {
+		this.virtualneMasine.put(vm.getIme(), vm);
+	}
 	public HashMap<String, VM> dobaviListuVM(Korisnik k){
 		//test
 		if(k==null)

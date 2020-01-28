@@ -9,19 +9,16 @@ Vue.component("vm-tabela", {
     <div>
     <table class="table">
 	<tr bgcolor="lightgrey">
-		<th>Naziv</th>
-		<th>Cena</th>
-		<th>&nbsp;</th>
+		<th>Ime</th>
+		<th>Broj jezgara</th>
+		<th>RAM</th>
+		<th>GPU</th>
+		<th>Organizacija</th>
 	</tr>
 		
-	<tr v-for="p in VMs">
-		<td>{{p.name }}</td>
-		<td>{{p.price}}</td>
-		<td>
-			<input type="number" style="width:40px" size="3" v-model="p.count" name="itemCount"> 
-			<input type="hidden" name="itemId" v-model="p.id"> 
-			<button v-on:click="addToCart(p)">Dodaj</button>
-		</td>
+	<tr v-for="vm in VMs">
+		<td>{{vm.ime}}</td>
+		<td>{{vm.brojJezgara}}</td>
 	</tr>
 </table>
 	<p>
@@ -44,7 +41,7 @@ Vue.component("vm-tabela", {
                 this.currentUser = response.data;
             })
         axios
-            .get('rest/vm/all')
+            .get('rest/vm/getVMs')
             .then(response => { this.VMs = response.data; console.log(response.data) });
     },
 });

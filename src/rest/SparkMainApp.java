@@ -1,10 +1,13 @@
 package rest;
 
 import beans.BazaPodataka;
+import beans.*;
 import beans.Disk;
 import beans.Korisnik;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+ 
+
 import spark.Session;
 
 import java.io.File;
@@ -12,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static spark.Spark.*;
-
+import beans.VM;
 public class SparkMainApp {
 
     private static Gson gson = new Gson();
@@ -22,10 +25,25 @@ public class SparkMainApp {
     public static void main(String[] args) throws IOException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
-
-        Korisnik superAdmin = new Korisnik("superadmin","superadmin","Super","Admin",null,"superadmin");
+        //PROMENILA SAM
+        Korisnik superAdmin = new Korisnik("super","super","Super","Admin",null,"superadmin");
+       
+       
         bp.dodajKorisnika(superAdmin);
-
+        ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
+        VM vm = new VM();
+        VM vmm = new VM();
+        ArrayList<VM> resu = new ArrayList<VM>();
+        resu.add(vmm);
+        resu.add(vm);
+        Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
+        KategorijaVM kat = new KategorijaVM("KAT1",5,8,3);
+        ArrayList<Disk> diskovi = new ArrayList<Disk>();
+        VM vm1 = new VM("VM1",kat,diskovi,o);
+        VM vm2 = new VM("VM2",kat,diskovi,o);
+        bp.dodajVM(vm1);
+        bp.dodajVM(vm2);
+        
 
         get("/",(req,res) ->{
             System.out.println("POGPODJEN");
@@ -37,10 +55,22 @@ public class SparkMainApp {
             return res;
         });
 
-        get("/rest/vm/all",(req,res) ->{
+        get("/rest/vm/getVMs",(req,res) ->{
             res.type("application/json");
-            return gson.toJson(bp.dobaviListuVM(null));
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            String uloga = k.getUloga();
+            System.out.println(uloga);
+            if(uloga.equals("superadmin")) {
+            	return gson.toJson(bp.dobaviListuVM(null));
+            }
+            else {
+            	return gson.toJson(bp.dobaviListuVM(k));
+            }
+            
+            
         });
+        
 
         post("rest/users/login",(req,res) ->{
 

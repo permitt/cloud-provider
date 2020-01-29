@@ -7,7 +7,8 @@ Vue.component("korisnici-tabela", {
     },
     template: ` 
 <div class="container">
-	<div class="col-lg-8 mx-auto" style="margin-top:30px">
+    <div class="col-lg-8 mx-auto" style="margin-top:30px">
+    <h3 style="text-align:center">Pregled korisnika</h3>
 	<table class="table table-dark">
 	<tr bgcolor="">
 		<th>Email</th>

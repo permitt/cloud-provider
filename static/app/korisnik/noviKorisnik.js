@@ -7,7 +7,7 @@ Vue.component('novi-korisnik', {
                 prezime: "",
                 email: "",
                 uloga: "",
-                organizacija: "",
+                organizacija: { ime: "" },
                 password: ""
             },
             passwordError: false,
@@ -18,7 +18,7 @@ Vue.component('novi-korisnik', {
             lastNameError: false,
             passwordShortError: false,
             password2: "",
-            organizacije: "",
+            organizacije: [],
         };
     },
     template: `
@@ -38,10 +38,8 @@ Vue.component('novi-korisnik', {
 
     <div class="form-group">
     <label for="organizacija">Organizacija</label>
-    <select  v-model="userToAdd.organizacija" class="form-control" required>
-        
-        <option v-for="o in organizacije>{{o.ime}}</option>
-        
+    <select v-model="userToAdd.organizacija" class="form-control" required>
+        <option v-for="o in organizacije" v-bind:id="o.ime">{{o.ime}}</option>
     </select>
     <small style="color:red" v-if="orgError">Morate odabrati organizaciju!</small>
         
@@ -135,7 +133,7 @@ Vue.component('novi-korisnik', {
                 this.roleError = true;
                 valid = false;
             }
-            if (this.userToAdd.organizacija == "") {
+            if (this.userToAdd.organizacija.ime == "") {
                 this.orgError = true;
                 valid = false;
             }
@@ -177,8 +175,11 @@ Vue.component('novi-korisnik', {
             });
         axios.get('rest/organizacija/all')
             .then((response) => {
-
-                this.organizacije = response.data;
+                if (Array.isArray(response.data.length))
+                    this.organizacije = response.data;
+                else
+                    this.organizacije = [...this.organizacije, response.data];
+                console.log(this.organizacije);
             })
             .catch((error) => {
                 if (error.response.status == 400)

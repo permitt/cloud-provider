@@ -8,7 +8,7 @@ Vue.component("diskovi-tabela", {
     template: ` 
 <div class="container">
     <div class="col-lg-8 mx-auto" style="margin-top:30px">
-    <h3>Pregled diskova</h3>
+    <h3 style="text-align:center">Pregled diskova</h3>
 	<table class="table table-dark">
 	<tr bgcolor="">
 		<th>Ime</th>

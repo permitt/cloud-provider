@@ -322,13 +322,13 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");
             String payload = req.body();
+            System.out.println(payload);
 
             Disk novi = gson.fromJson(payload,Disk.class);
             if(!bp.unikatnoImeDiska(novi.getIme())){
                 res.status(400);
                 return res;
             }
-
             bp.dodajDisk(novi);
             return "OK";
         });

@@ -7,7 +7,7 @@ Vue.component('diskovi-izmjena', {
             diskToEdit: {
                 ime: "",
                 tip: "",
-                kapacitet: 0,
+                kapacitet: 1,
                 vm: { ime: "" },
                 organizacija: { ime: "" }
             },
@@ -48,18 +48,19 @@ Vue.component('diskovi-izmjena', {
 
     <div class="form-group">
         <label for="ime">Kapacitet:</label> <template v-model="diskToEdit.kapacitet">{{diskToEdit.kapacitet}}GB</template>
-        <input v-model="diskToEdit.kapacitet" type="range" class="custom-range" min="0" max="1000" step="1" id="customRange3" required >
+        <input v-model="diskToEdit.kapacitet" type="range" class="custom-range" min="1" max="2000" step="1" id="customRange3" required >
     </div>
    
     <div class="form-group">
     <label for="vm">VM</label>
-    <select v-model="diskToEdit.vm.ime" class="form-control" required>
-        <option v-for="v in VMs" v-bind="v.ime">{{v.ime}}</option>
+    <select id="vmForm" v-model="diskToEdit.vm.ime" class="form-control" required>
+        <option v-for="v in VMs" v-bind:id="v.ime">{{v.ime}}</option>
     </select>
+    
     </div>
 
-    <button type="button" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
-    <button v-on:click="izbrisi()" type="button" class="btn btn-danger">Obrisi</button>
+    <button v-if="currentUser.uloga != 'korisnik'" type="button" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
+    <button v-if="currentUser.uloga != 'korisnik'" v-on:click="izbrisi()" type="button" class="btn btn-danger">Obrisi</button>
     </form>
 
 
@@ -120,7 +121,15 @@ Vue.component('diskovi-izmjena', {
     mounted() {
 
         axios.get('rest/users/current')
-            .then(response => (this.currentUser = response.data));
+            .then(response => {
+                this.currentUser = response.data;
+                if (this.currentUser.uloga == "korisnik") {
+                    document.querySelector("#ime").setAttribute("readonly", "true");
+                    document.querySelector("#customRange3").setAttribute("readonly", "true");
+                    document.querySelector("#tip").setAttribute("readonly", "true");
+                    document.querySelector("#vmForm").setAttribute("readonly", "true");
+                }
+            });
         axios.get('rest/diskovi/' + this.ime)
             .then((response) => {
                 this.diskToEdit = response.data;
@@ -137,5 +146,6 @@ Vue.component('diskovi-izmjena', {
             .catch(e => {
                 console.log(e.response);
             });
+
     }
 });

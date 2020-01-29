@@ -226,14 +226,16 @@ public class  BazaPodataka {
 	}
 	public void napuniBazu(){
 		Organizacija org = new Organizacija();
+		Organizacija org2 = new Organizacija("Addiko","haha","sda",new ArrayList<Korisnik>(),new ArrayList<VM>());
 		Korisnik superAdmin = new Korisnik("super","super","Super","Admin",new Organizacija(),"superadmin");
-		Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org,"admin");
-		Korisnik djura = new Korisnik("djura@djura.com","djura","Djordje","Dokic",org,"korisnik");
-		Organizacija org2 = new Organizacija("Addiko","haha","sda",null,null);
-		this.organizacije.put(org2.getIme(),org2);
+		Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org2,"admin");
+		Korisnik djura = new Korisnik("djura@djura.com","djura","Djordje","Dokic",org2,"korisnik");
 
-		org.dodajKorisnika(pera);
-		org.dodajKorisnika(djura);
+		this.organizacije.put(org2.getIme(),org2);
+		this.organizacije.put(org.getIme(),org);
+
+		org2.dodajKorisnika(pera);
+		org2.dodajKorisnika(djura);
 		this.dodajOrganizaciju(org);
 
 		this.dodajKorisnika(superAdmin);

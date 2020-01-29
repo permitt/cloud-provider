@@ -8,12 +8,12 @@ public class Korisnik {
     private Organizacija organizacija;
     private String uloga;
 
-    public Korisnik(String email, String password, String ime, String prezime, Organizacija organizacija, String uloga) {
+    public Korisnik(String email, String password, String ime, String prezime, Organizacija org, String uloga) {
         this.email = email;
         this.password = password;
         this.ime = ime;
         this.prezime = prezime;
-        this.organizacija = organizacija;
+        this.organizacija = org;
         this.uloga = uloga;
     }
 
@@ -50,7 +50,7 @@ public class Korisnik {
     }
 
     public Organizacija getOrganizacija() {
-        return organizacija;
+        return this.organizacija;
     }
 
     public void setOrganizacija(Organizacija organizacija) {

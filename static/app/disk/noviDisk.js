@@ -7,12 +7,13 @@ Vue.component('novi-disk', {
             diskToAdd: {
                 ime: "",
                 tip: "HDD",
-                kapacitet: 0,
+                kapacitet: 1,
                 vm: { ime: "" },
                 organizacija: { ime: "" }
             },
             imeUnikatError: false,
             imeError: false,
+            vmError: false,
 
         };
     },
@@ -43,14 +44,15 @@ Vue.component('novi-disk', {
 
     <div class="form-group">
         <label for="ime">Kapacitet:</label> <template v-model="diskToAdd.kapacitet">{{diskToAdd.kapacitet}}GB</template>
-        <input v-model="diskToAdd.kapacitet" type="range" class="custom-range" min="0" max="1000" step="1" id="customRange3" required >
+        <input v-model="diskToAdd.kapacitet" type="range" class="custom-range" min="1" max="2000" step="1" id="customRange3" required >
     </div>
    
     <div class="form-group">
     <label for="vm">VM</label>
     <select v-model="diskToAdd.vm.ime" class="form-control" required>
-        <option v-for="v in VMs" v-bind="v.ime">{{v.ime}}</option>
+        <option v-for="v in VMs" v-bind:id="v.ime">{{v.ime}}</option>
     </select>
+    <small v-if="vmError" style="color:red">Morate odabrati virtuelnu masinu!</small>
     </div>
 
     <button type="button" class="btn btn-primary" v-on:click="dodaj()">Dodaj</button>
@@ -67,14 +69,20 @@ Vue.component('novi-disk', {
     ,
     methods: {
         formValid() {
+            let valid = true;
             this.imeError = false;
             this.imeUnikatError = false;
             if (this.diskToAdd.ime == "") {
                 this.imeError = true;
-                return false;
+                valid = false;
             }
 
-            return true;
+            if (this.diskToAdd.vm.ime == "") {
+                this.vmError = true;
+                valid = false;
+            }
+
+            return valid;
         },
         dodaj() {
 
@@ -86,7 +94,9 @@ Vue.component('novi-disk', {
                     this.diskToAdd.vm = vm;
             });
 
-            console.log(JSON.stringify(this.diskToAdd));
+            this.diskToAdd.organizacija = this.diskToAdd.vm.organizacija;
+            console.log(this.diskToAdd.organizacija);
+
             axios
                 .post("/rest/diskovi", JSON.stringify(this.diskToAdd))
                 .then(response => {

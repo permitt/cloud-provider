@@ -23,6 +23,7 @@ public class Organizacija {
 		this.logo = logo;
 		this.korisnici = korisnici;
 		this.resursi = resursi;
+
 	}
 	
 	

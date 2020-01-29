@@ -17,12 +17,12 @@ Vue.component("korisnici-tabela", {
 	</tr>
 		
 	<tr v-for="u in users">
-		<td>{{u.email }}</td>
+		<td>{{u.email}}</td>
         <td>{{u.ime}}</td>
         <td>{{u.prezime}}</td>
 		<td>
 			<input type="hidden" name="itemId" v-model="u.email"> 
-			<button v-on:click="edit(u)">Izmjena</button>
+			<button class="btn btn-success" v-on:click="edit(u)">Izmjena</button>
 		</td>
 	</tr>
 </table>

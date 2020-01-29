@@ -17,6 +17,7 @@ Vue.component('nav-bar', {
         <a class="nav-item nav-link" href="#/">VM</a>
         <a class="nav-item nav-link" href="#/korisnici" v-if="currentUser.uloga != 'korisnik'">Korisnici</a>
         <a class="nav-item nav-link" href="#/diskovi">Diskovi</a>
+        <a class="nav-item nav-link" href="#/organizacije" v-if="currentUser.uloga == 'superadmin'">Organizacije</a>
         <a class="nav-item nav-link" href="#/kategorije" v-if="currentUser.uloga == 'superadmin'">Kategorije</a>
     </div>    
 

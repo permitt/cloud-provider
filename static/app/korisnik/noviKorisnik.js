@@ -38,8 +38,10 @@ Vue.component('novi-korisnik', {
 
     <div class="form-group">
     <label for="organizacija">Organizacija</label>
-    <select v-for="o in organizacije" v-model="userToAdd.organizacija" class="form-control" required>
-        <option>{{o.ime}}</option>
+    <select  v-model="userToAdd.organizacija" class="form-control" required>
+        
+        <option v-for="o in organizacije>{{o.ime}}</option>
+        
     </select>
     <small style="color:red" v-if="orgError">Morate odabrati organizaciju!</small>
         
@@ -175,6 +177,7 @@ Vue.component('novi-korisnik', {
             });
         axios.get('rest/organizacija/all')
             .then((response) => {
+
                 this.organizacije = response.data;
             })
             .catch((error) => {

@@ -1,11 +1,10 @@
 package rest;
 
 import beans.*;
-import beans.Organizacija;
 
 import com.google.gson.Gson;
-import beans.Organizacija;
 import com.google.gson.reflect.TypeToken;
+import data.BazaPodataka;
 import spark.Session;
 
 import java.io.File;
@@ -24,37 +23,7 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         //PROMENILA SAM
-        Organizacija org = new Organizacija();
-        Korisnik superAdmin = new Korisnik("super","super","Super","Admin",new Organizacija(),"superadmin");
-        Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org,"admin");
-        Korisnik djura = new Korisnik("djura@djura.com","djura","Djordje","Dokic",org,"korisnik");
-
-        org.dodajKorisnika(pera);
-        org.dodajKorisnika(djura);
-        bp.dodajOrganizaciju(org);
-
-        bp.dodajKorisnika(superAdmin);
-        bp.dodajKorisnika(pera);
-        bp.dodajKorisnika(djura);
-
-        ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
-
-        VM vm = new VM();
-        VM vmm = new VM();
-        ArrayList<VM> resu = new ArrayList<VM>();
-        resu.add(vmm);
-        resu.add(vm);
-        Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
-        KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
-        KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
-        bp.dodajKategoriju(kat2);
-        bp.dodajKategoriju(kat1);
-        ArrayList<Disk> diskovi = new ArrayList<Disk>();
-        VM vm1 = new VM("VM1",kat1,diskovi,o);
-        VM vm2 = new VM("VM2",kat2,diskovi,o);
-        bp.dodajVM(vm1);
-        bp.dodajVM(vm2);
-
+        bp.napuniBazu();
 
         get("/",(req,res) ->{
             System.out.println("POGPODJEN");
@@ -267,6 +236,103 @@ public class SparkMainApp {
 
             return "OK";
         });
+
+
+        get("/rest/diskovi/all",(req,res)->{
+            res.type("application/json");
+            Session ss = req.session(true);
+            Korisnik k = ss.attribute("korisnik");
+            if(k == null){
+                res.status(403);
+                return res;
+            }
+            if(k.getUloga().equals("superadmin"))
+                return gson.toJson(bp.dobaviDiskove(null));
+
+            return gson.toJson(bp.dobaviDiskove(k));
+        });
+
+        get("/rest/diskovi/:ime",(req,res)->{
+            res.type("application/json");
+
+            String param = req.params("ime");
+            Disk d = bp.nadjiDisk(param);
+            if(d == null){
+                res.status(400);
+                res.body("Disk s tim imenom ne postoji.");
+                return res;
+            }
+
+            res.type("application/json");
+            return gson.toJson(d);
+
+        });
+
+        put("/rest/diskovi/:ime",(req,res)->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            String param = req.params("ime");
+
+
+            String payload = req.body();
+            Disk d = gson.fromJson(payload,Disk.class);
+            //Provjera da li je mijenjano ime i da li je unikatno
+            if(!d.getIme().equals(param) && !bp.unikatnoImeDiska(d.getIme())){
+                res.status(400);
+                return res;
+            }
+
+            // Admin  moze mijenjati samo iz svoje organizacije
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija().getIme());
+
+            if(ulogovan.getUloga().equals("korisnik") || priv){
+                res.status(403);
+                return res;
+            }
+
+
+            if(!bp.izmjeniDisk(param,d))
+                return "Failed";
+
+            return "OK";
+
+        });
+
+        delete("/rest/diskovi/:ime",(req,res) -> {
+            String param = req.params("ime");
+            Disk d = bp.nadjiDisk(param);
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija().getIme());
+
+
+            if(ulogovan.getUloga().equals("korisnik") || priv){
+                res.status(403);
+                return res;
+            }
+
+            if(!bp.izbrisiDisk(param))
+                return "Failed!";
+
+            return "OK";
+        });
+
+        post("/rest/diskovi",(req,res)->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            String payload = req.body();
+
+            Disk novi = gson.fromJson(payload,Disk.class);
+            if(!bp.unikatnoImeDiska(novi.getIme())){
+                res.status(400);
+                return res;
+            }
+
+            bp.dodajDisk(novi);
+            return "OK";
+        });
+
 
     }
 

@@ -9,7 +9,7 @@ public class VM {
 	private int brojJezgara;
 	private int RAM;
 	private int GPU;
-	private ArrayList<Disk> diskovi;
+	private transient ArrayList<Disk> diskovi;
 	private Organizacija organizacija;
 	private ArrayList<Aktivnost> listaAktivnosti;
 	

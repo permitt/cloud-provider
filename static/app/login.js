@@ -24,7 +24,7 @@ Vue.component('log-in', {
         </tr>
         <tr>
             <td></td>
-            <td><button v-on:click="logIn">Prijava</button></td>
+            <td><button class="btn btn-success" v-on:click="logIn">Prijava</button></td>
         </tr>
 
 </table>

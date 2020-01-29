@@ -6,6 +6,9 @@ const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
 const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
 const profil = { template: '<profil></profil>' };
+const diskoviTabela = { template: '<diskovi-tabela></diskovi-tabela>' };
+const diskoviIzmjena = { template: '<diskovi-izmjena></diskovi-izmjena>' }
+const noviDisk = { template: '<novi-disk></novi-disk>' };
 
 const router = new VueRouter({
     mode: 'hash',
@@ -15,6 +18,9 @@ const router = new VueRouter({
         { path: '/korisnici', component: korisniciTabela },
         { path: '/korisnici/novi', component: noviKorisnik },
         { path: '/korisnici/:email', component: korisniciIzmjena },
+        { path: '/diskovi', component: diskoviTabela },
+        { path: '/diskovi/novi', component: noviDisk },
+        { path: '/diskovi/:ime', component: diskoviIzmjena },
         { path: '/profil', component: profil },
         { path: '/login', component: logIn }
     ]

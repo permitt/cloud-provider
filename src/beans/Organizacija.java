@@ -13,6 +13,7 @@ public class Organizacija {
 	public Organizacija() {
 		this.ime= "NLB banka";
 		this.korisnici = new ArrayList<>();
+		this.resursi = new ArrayList<VM>();
 	}
 	
 	public Organizacija(String ime, String opis, String logo, ArrayList<Korisnik> korisnici, ArrayList<VM> resursi) {

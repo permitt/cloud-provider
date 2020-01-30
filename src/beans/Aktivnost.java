@@ -9,6 +9,11 @@ public class Aktivnost {
 	public Aktivnost() {
 		
 	}
+	public Aktivnost(Date upaljena){
+		this.upaljena = upaljena;
+		this.ugasena = null;
+	}
+
 	public Aktivnost(Date upaljena, Date ugasena) {
 		super();
 		this.upaljena = upaljena;

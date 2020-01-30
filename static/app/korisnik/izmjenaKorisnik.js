@@ -18,7 +18,7 @@ Vue.component('korisnici-izmjena', {
     template: `
         
 <div class="container">
-<div class="col-lg-8 mx-auto" style="margin-top:30px">
+<div class="col-lg-8 mx-auto" style="margin:30px 0;">
     <h3>Korisnik : {{this.userToEdit.ime}} {{this.userToEdit.prezime}} </h3>
     <form class="needs-validation novalidate" @onSubmit="sacuvaj">
     <div class="form-group">
@@ -48,7 +48,7 @@ Vue.component('korisnici-izmjena', {
     <div class="form-group">
         <label for="ime">Password ponovo</label>
         <input type="password" class="form-control" id="pw2" v-model="password2" required>
-        <small v-if="passwordError">Passwords don't match!</small>
+        <small style="color:red" v-if="passwordError">Passwords don't match!</small>
     </div>
     <div class="form-group">
     <label for="uloga">Uloga</label>

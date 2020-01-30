@@ -2,9 +2,9 @@ package data;
 
 import beans.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class  BazaPodataka {
 	private HashMap<String, Korisnik> korisnici;
@@ -187,13 +187,14 @@ public class  BazaPodataka {
 			return false;
 		return true;
 	}
-	
+
+
 	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String imeOrganizacije) {
 		//ne znam jos kako da proveravam parametre, kako da vracam sta nije dobro
 		//treba razmisliti malo o tome
 		VM vm ;
 		if(unikatnoImeVM(ime)) {
-			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije));
+			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije),new ArrayList<Aktivnost>());
 			return "OK";
 		}
 		else {
@@ -211,20 +212,23 @@ public class  BazaPodataka {
 		//obrisi VM
 		this.virtualneMasine.remove(ime);
 		}
-	public String izmeniVM(VM novaVM,String staroIme) {
-		if(unikatnoImeVM(novaVM.getIme())) {
-			this.virtualneMasine.get(staroIme).setIme(novaVM.getIme());
-			this.virtualneMasine.get(novaVM.getIme()).setKategorija(novaVM.getKategorija());
-			return "OK";
-		}
-		else {
-			return "EROR";
-		}
+	public boolean izmjeniVM(String ime,VM nova) {
+
+		VM vm = this.virtualneMasine.get(ime);
+		vm.setIme(nova.getIme());
+		vm.setKategorija(nova.getKategorija());
+		vm.setDiskovi(nova.getDiskovi());
+		vm.setListaAktivnosti(nova.getListaAktivnosti());
+		for(var d : vm.getDiskovi())
+			d.setVm(vm);
+		this.virtualneMasine.remove(ime);
+		this.virtualneMasine.put(vm.getIme(),vm);
+		return true;
 	}
 	public void promeniListuAktivnostiVM(String imeVM) {
 		
 	}
-	public void napuniBazu(){
+	public void napuniBazu() throws ParseException {
 		Organizacija org = new Organizacija();
 		Organizacija org2 = new Organizacija("Addiko","haha","sda",new ArrayList<Korisnik>(),new ArrayList<VM>());
 		Korisnik superAdmin = new Korisnik("super","super","Super","Admin",new Organizacija(),"superadmin");
@@ -263,9 +267,17 @@ public class  BazaPodataka {
 
 		ArrayList<Disk> diskovi2 = new ArrayList<Disk>();
 		diskovi2.add(d3);
+		ArrayList<Aktivnost> akt = new ArrayList<Aktivnost>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		Date pocetak = sdf.parse("05-01-2020 13:45:10");
 
-		VM vm1 = new VM("VM1",kat1,diskovi,o);
-		VM vm2 = new VM("VM2",kat2,diskovi2,o);
+		Date pocetak2 = sdf.parse("03-01-2020 10:55:10");
+		Date kraj2 = sdf.parse("05-01-2020 10:25:10");
+		akt.add(new Aktivnost(pocetak,new Date()));
+		akt.add(new Aktivnost(pocetak2,kraj2));
+		VM vm1 = new VM("VM1",kat1,diskovi,o,new ArrayList<Aktivnost>());
+		VM vm2 = new VM("VM2",kat2,diskovi2,o,akt);
+		vm2.upali();
 
 		d1.setVm(vm1);
 		d2.setVm(vm1);
@@ -278,7 +290,7 @@ public class  BazaPodataka {
 		this.dodajVM(vm2);
 
 		org.getResursi().add(vm1);
-
+		vm2.ugasi();
 
 	}
 

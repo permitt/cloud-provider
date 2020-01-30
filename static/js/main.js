@@ -1,7 +1,11 @@
 const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
 const VMTabela = { template: '<vm-tabela></vm-tabela>' };
+<<<<<<< HEAD
 const VMizmena = { template: '<vm-izmena></vm-izmena>' };
+=======
+const VMizmjena = { template: '<vm-izmjena></vm-izmjena>' }
+>>>>>>> 49311a3cd0521fa1cb26dee1e86a4d4359e989a3
 const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
 const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
@@ -14,7 +18,11 @@ const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/', component: VMTabela },
+<<<<<<< HEAD
         { path: '/vm/:ime', component: VMizmena },
+=======
+        { path: '/vm/:ime', component: VMizmjena },
+>>>>>>> 49311a3cd0521fa1cb26dee1e86a4d4359e989a3
         { path: '/korisnici', component: korisniciTabela },
         { path: '/korisnici/novi', component: noviKorisnik },
         { path: '/korisnici/:email', component: korisniciIzmjena },

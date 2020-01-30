@@ -19,7 +19,7 @@ Vue.component('diskovi-izmjena', {
     template: `
         
 <div class="container">
-<div class="col-lg-8 mx-auto" style="margin-top:30px">
+<div class="col-lg-8 mx-auto" style="margin:30px 0;">
     <h3>Disk : {{this.diskToEdit.ime}} </h3>
     <form >
 

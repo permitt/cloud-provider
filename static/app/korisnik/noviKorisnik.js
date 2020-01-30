@@ -24,7 +24,7 @@ Vue.component('novi-korisnik', {
     template: `
         
 <div class="container">
-<div class="col-lg-8 mx-auto" style="margin-top:30px">
+<div class="col-lg-8 mx-auto" style="margin:30px 0;">
     <h3>Unos novog korisnika</h3>
 
 

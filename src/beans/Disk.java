@@ -7,7 +7,7 @@ public class Disk {
     private String tip;
     private int kapacitet;
     private Organizacija organizacija;
-    private VM vm;
+    private transient VM vm;
 
 
 

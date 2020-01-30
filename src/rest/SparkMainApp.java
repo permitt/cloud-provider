@@ -5,11 +5,11 @@ import beans.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import data.BazaPodataka;
 import spark.Session;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 
@@ -26,7 +26,8 @@ public class SparkMainApp {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         //PROMENILA SAM
-        bp.napuniBazu();
+        //bp.napuniBazu();
+        ucitajBazu();
 
         get("/",(req,res) ->{
             System.out.println("POGPODJEN");
@@ -71,14 +72,6 @@ public class SparkMainApp {
 
             VM vm = gson.fromJson(payload,VM.class);
 
-            // Kreiraj diskove posebno ovdje
-//            HashMap<String, Object> mapa = gson.fromJson(payload, new TypeToken<HashMap<String, Object>>() {}.getType());
-//            System.out.println(mapa);
-//            System.out.println(mapa.get("diskovi"));
-//            List<Disk> d = gson.fromJson(mapa.get("diskovi").toString(),new TypeToken<List<Disk>>(){}.getType());
-//            System.out.println(d.size());
-
-
             //Provjera da li je mijenjano ime i da li je unikatno
             if(!vm.getIme().equals(param) && !bp.unikatnoImeVM(vm.getIme())){
                 res.status(400);
@@ -86,7 +79,7 @@ public class SparkMainApp {
             }
 
             // Admin  moze mijenjati samo iz svoje organizacije
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(vm.getOrganizacija());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(vm.getOrganizacija());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
                 res.status(403);
@@ -96,7 +89,7 @@ public class SparkMainApp {
 
             if(!bp.izmjeniVM(param,vm))
                 return "Failed";
-
+            sacuvajBazu();
             return "OK";
 
         });
@@ -121,7 +114,7 @@ public class SparkMainApp {
             if(ulogovan.getUloga().equals("superadmin")){
                 return gson.toJson(bp.dobaviOrganizacije());
             }else if(ulogovan.getUloga().equals("admin")){
-                return gson.toJson(ulogovan.getOrganizacija());
+                return gson.toJson(bp.nadjiOrganizaciju(ulogovan.getOrganizacija()));
             }else{
                 res.status(403);
                 return res;
@@ -142,7 +135,7 @@ public class SparkMainApp {
                 return "Wrong email/password combination.";
             }
             ss.attribute("korisnik",k);
-
+            sacuvajBazu();
             return "OK";
         });
 
@@ -155,6 +148,7 @@ public class SparkMainApp {
             if (k != null) {
                 ss.invalidate();
             }
+            sacuvajBazu();
             return "OK";
         });
 
@@ -170,7 +164,7 @@ public class SparkMainApp {
             res.type("application/json");
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
-            if(k == null){
+            if(k == null || k.getUloga().equals("korisnik")){
                 res.status(403);
                 return res;
             }
@@ -194,7 +188,7 @@ public class SparkMainApp {
             }
 
             res.type("application/json");
-            if(ulogovan.getUloga().equals("admin") && k.getOrganizacija().getIme().equals(ulogovan.getOrganizacija().getIme())){
+            if(ulogovan.getUloga().equals("admin") && k.getOrganizacija().equals(ulogovan.getOrganizacija())){
                 return gson.toJson(k);
             }else if(ulogovan.getUloga().equals("superadmin")){
                 return gson.toJson(k);
@@ -220,7 +214,7 @@ public class SparkMainApp {
             }
 
             // Admin  moze mijenjati samo iz svoje organizacije
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(k.getOrganizacija().getIme());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(k.getOrganizacija());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
                 res.status(403);
@@ -234,6 +228,7 @@ public class SparkMainApp {
             if(ulogovan.getEmail().equals(param)) {
                 ulogovan.setEmail(k.getEmail());
             }
+            sacuvajBazu();
             return "OK";
         });
 
@@ -249,7 +244,9 @@ public class SparkMainApp {
            }
 
            bp.dodajKorisnika(novi);
-            return "OK";
+            sacuvajBazu();
+           return "OK";
+
         });
 
         delete("/rest/users/:email",(req,res)->{
@@ -262,7 +259,7 @@ public class SparkMainApp {
                 res.status(400);
                 return res;
             }
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(k.getOrganizacija().getIme());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(k.getOrganizacija());
 
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
@@ -272,7 +269,7 @@ public class SparkMainApp {
 
             if(!bp.izbrisiKorisnika(param))
                 return "Failed!";
-
+            sacuvajBazu();
             return "OK";
         });
 
@@ -291,10 +288,7 @@ public class SparkMainApp {
             return gson.toJson(bp.dobaviDiskove(k));
         });
 
-        get("/rest/diskovi/all/list",(req,res)->{
-            res.type("application/json");
-            return gson.toJson(bp.dobaviDiskove(null));
-        });
+
 
         get("/rest/diskovi/:ime",(req,res)->{
             res.type("application/json");
@@ -327,7 +321,7 @@ public class SparkMainApp {
             }
 
             // Admin  moze mijenjati samo iz svoje organizacije
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(d.getOrganizacija());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
                 res.status(403);
@@ -337,7 +331,7 @@ public class SparkMainApp {
 
             if(!bp.izmjeniDisk(param,d))
                 return "Failed";
-
+            sacuvajBazu();
             return "OK";
 
         });
@@ -348,7 +342,7 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");
 
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(d.getOrganizacija());
 
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
@@ -358,7 +352,7 @@ public class SparkMainApp {
 
             if(!bp.izbrisiDisk(param))
                 return "Failed!";
-
+            sacuvajBazu();
             return "OK";
         });
 
@@ -374,11 +368,30 @@ public class SparkMainApp {
                 return res;
             }
             bp.dodajDisk(novi);
+            sacuvajBazu();
             return "OK";
         });
 
 
-    }
 
+    }
+    public static void sacuvajBazu() throws IOException {
+        try (Writer writer = new FileWriter("bazaPodataka.json")) {
+            gson.toJson(bp, writer);
+        }
+    };
+
+    public static void ucitajBazu(){
+
+        try(JsonReader reader = new JsonReader(new FileReader("bazaPodataka.json"))){
+            //gson = new GsonBuilder().setDateFormat("MMM dd, yyyy, HH:mm:ss").create();
+            bp = gson.fromJson(reader, BazaPodataka.class);
+            gson = new GsonBuilder().setDateFormat("EEE MMM dd yyyy HH:mm:ss").create();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

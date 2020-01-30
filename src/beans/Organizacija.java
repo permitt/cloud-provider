@@ -12,7 +12,7 @@ public class Organizacija {
 	
 	public Organizacija() {
 		this.ime= "NLB banka";
-		this.korisnici = new ArrayList<>();
+		this.korisnici = new ArrayList<Korisnik>();
 		this.resursi = new ArrayList<VM>();
 	}
 	

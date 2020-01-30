@@ -22,7 +22,7 @@ Vue.component("diskovi-tabela", {
 		<td>{{d.ime}}</td>
         <td>{{d.kapacitet}}</td>
         <td>{{d.tip}}</td>
-        <td>{{d.vm.ime}}</td>
+        <td>{{d.vm}}</td>
 		<td>
 			<input type="hidden" name="itemId" v-model="d.ime"> 
 			<button class="btn btn-success" v-on:click="edit(d)">Izmjena</button>

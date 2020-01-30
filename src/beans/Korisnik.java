@@ -5,10 +5,10 @@ public class Korisnik {
     private String password;
     private String ime;
     private String prezime;
-    private Organizacija organizacija;
+    private String organizacija;
     private String uloga;
 
-    public Korisnik(String email, String password, String ime, String prezime, Organizacija org, String uloga) {
+    public Korisnik(String email, String password, String ime, String prezime, String org, String uloga) {
         this.email = email;
         this.password = password;
         this.ime = ime;
@@ -49,11 +49,11 @@ public class Korisnik {
         this.prezime = prezime;
     }
 
-    public Organizacija getOrganizacija() {
+    public String getOrganizacija() {
         return this.organizacija;
     }
 
-    public void setOrganizacija(Organizacija organizacija) {
+    public void setOrganizacija(String organizacija) {
         this.organizacija = organizacija;
     }
 
@@ -67,6 +67,6 @@ public class Korisnik {
 
     @Override
     public String toString() {
-        return "Ime: " + this.ime + ", prezime: " + this.prezime + ",uloga: "+this.uloga + ",organizacija: "+this.organizacija.getIme() ;
+        return "Ime: " + this.ime + ", prezime: " + this.prezime + ",uloga: "+this.uloga + ",organizacija: "+this.organizacija ;
     }
 }

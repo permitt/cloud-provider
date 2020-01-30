@@ -7,7 +7,7 @@ Vue.component('novi-korisnik', {
                 prezime: "",
                 email: "",
                 uloga: "",
-                organizacija: { ime: "" },
+                organizacija: "",
                 password: ""
             },
             passwordError: false,
@@ -39,7 +39,7 @@ Vue.component('novi-korisnik', {
     <div class="form-group">
     <label for="organizacija">Organizacija</label>
     <select v-model="userToAdd.organizacija" class="form-control" required>
-        <option v-for="o in organizacije" v-bind:id="o.ime">{{o.ime}}</option>
+        <option v-for="o in organizacije" v-bind:id="o">{{o}}</option>
     </select>
     <small style="color:red" v-if="orgError">Morate odabrati organizaciju!</small>
         
@@ -133,7 +133,7 @@ Vue.component('novi-korisnik', {
                 this.roleError = true;
                 valid = false;
             }
-            if (this.userToAdd.organizacija.ime == "") {
+            if (this.userToAdd.organizacija == "") {
                 this.orgError = true;
                 valid = false;
             }
@@ -155,7 +155,7 @@ Vue.component('novi-korisnik', {
                 if (el.ime == this.userToAdd.organizacija)
                     this.userToAdd.organizacija = el;
             })
-
+            console.log(JSON.stringify(this.userToAdd));
             axios
                 .post("/rest/users", JSON.stringify(this.userToAdd))
                 .then(response => {
@@ -175,10 +175,13 @@ Vue.component('novi-korisnik', {
             });
         axios.get('rest/organizacija/all')
             .then((response) => {
-                if (Array.isArray(response.data.length))
-                    this.organizacije = response.data;
+                console.log(response.data);
+                console.log(Array.isArray(response.data));
+                if (Array.isArray(response.data))
+                    this.organizacije = response.data.map(el => el.ime);
                 else
-                    this.organizacije = [...this.organizacije, response.data];
+                    this.organizacije = [response.data.ime];
+
                 console.log(this.organizacije);
             })
             .catch((error) => {

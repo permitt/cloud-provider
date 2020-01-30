@@ -1,7 +1,12 @@
 package data;
 
 import beans.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -176,7 +181,7 @@ public class  BazaPodataka {
 			return virtualneMasine.values();
 		//vraca listu vMasina organizacije kojoj korisnik pripada ili ciji je admin
 		HashMap<String, VM> vMasine = new HashMap<String, VM>();
-		Organizacija org = k.getOrganizacija();
+		Organizacija org = this.organizacije.get(k.getOrganizacija());
 		for(VM vm : org.getResursi()) {
 			vMasine.put(vm.getIme(), vm);
 		}
@@ -231,42 +236,57 @@ public class  BazaPodataka {
 	public void napuniBazu() throws ParseException {
 		Organizacija org = new Organizacija();
 		Organizacija org2 = new Organizacija("Addiko","haha","sda",new ArrayList<Korisnik>(),new ArrayList<VM>());
-		Korisnik superAdmin = new Korisnik("super","super","Super","Admin",new Organizacija(),"superadmin");
-		Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org2,"admin");
-		Korisnik djura = new Korisnik("djura@djura.com","djura","Djordje","Dokic",org2,"korisnik");
+		Korisnik superAdmin = new Korisnik("super","super","Super","Admin",org.getIme(),"superadmin");
+		Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org2.getIme(),"admin");
+
 
 		this.organizacije.put(org2.getIme(),org2);
 		this.organizacije.put(org.getIme(),org);
 
-		org2.dodajKorisnika(pera);
-		org2.dodajKorisnika(djura);
-		this.dodajOrganizaciju(org);
+
+
 
 		this.dodajKorisnika(superAdmin);
 		this.dodajKorisnika(pera);
-		this.dodajKorisnika(djura);
+
 
 		ArrayList<Korisnik> kor = new ArrayList<Korisnik>();
 
-		VM vm = new VM();
-		VM vmm = new VM();
+
 		ArrayList<VM> resu = new ArrayList<VM>();
-		resu.add(vmm);
-		resu.add(vm);
+
+
 		Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
+		this.organizacije.put(o.getIme(),o);
+		Korisnik djura = new Korisnik("djura@djura.com","djura","Djordje","Dokic",o.getIme(),"korisnik");
+
+		this.dodajKorisnika(djura);
+
+
 		KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
 		KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
 		this.dodajKategoriju(kat2);
 		this.dodajKategoriju(kat1);
-		Disk d1 = new Disk("exp","HDD",480,org.getIme(),null);
+		Disk d1 = new Disk("exp","HDD",480,org2.getIme(),null);
 		Disk d2 = new Disk("forceX10","SDD",920,org.getIme(),null);
-		Disk d3 = new Disk("dragon9","SDD",256,org.getIme(),null);
+		Disk d3 = new Disk("dragon9","SDD",256,o.getIme(),null);
+		Disk d4 = new Disk("octaX","HDD",256,org.getIme(),null);
+		Disk d5 = new Disk("prime","SDD",512,org2.getIme(),null);
+
 		ArrayList<Disk> diskovi = new ArrayList<Disk>();
 		diskovi.add(d1);
 		diskovi.add(d2);
+		Korisnik ivo = new Korisnik("ivo@ivo.com","ivo123","Ivan","Ivanovic",org.getIme(),"korisnik");
+
+		this.dodajKorisnika(ivo);
 
 		ArrayList<Disk> diskovi2 = new ArrayList<Disk>();
 		diskovi2.add(d3);
+
+		ArrayList<Disk> diskovi3 = new ArrayList<Disk>();
+		diskovi3.add(d4);
+		diskovi3.add(d4);
+
 		ArrayList<Aktivnost> akt = new ArrayList<Aktivnost>();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		Date pocetak = sdf.parse("05-01-2020 13:45:10");
@@ -274,23 +294,36 @@ public class  BazaPodataka {
 		Date pocetak2 = sdf.parse("03-01-2020 10:55:10");
 		Date kraj2 = sdf.parse("05-01-2020 10:25:10");
 		akt.add(new Aktivnost(pocetak,new Date()));
+		VM vm3 = new VM("VM3",kat2,diskovi2,org.getIme(),akt);
 		akt.add(new Aktivnost(pocetak2,kraj2));
-		VM vm1 = new VM("VM1",kat1,diskovi,o.getIme(),new ArrayList<Aktivnost>());
-		VM vm2 = new VM("VM2",kat2,diskovi2,o.getIme(),akt);
+
+		Date pocetak3 = sdf.parse("05-12-2019 10:55:10");
+		ArrayList<Aktivnost> akt2 = new ArrayList<Aktivnost>();
+		akt2.add(new Aktivnost(pocetak2,new Date()));
+
+		VM vm1 = new VM("VM1",kat1,diskovi,org2.getIme(),akt);
+		VM vm2 = new VM("VM2",kat2,diskovi2,o.getIme(),akt2);
 		vm2.upali();
 
 		d1.setVm(vm1.getIme());
-		d2.setVm(vm1.getIme());
+		d5.setVm(vm1.getIme());
 		d3.setVm(vm2.getIme());
+		d2.setVm(vm3.getIme());
+		d4.setVm(vm3.getIme());
 		this.diskovi.put(d1.getIme(),d1);
 		this.diskovi.put(d2.getIme(),d2);
 		this.diskovi.put(d3.getIme(),d3);
+		this.diskovi.put(d4.getIme(),d4);
+		this.diskovi.put(d5.getIme(),d5);
 
 		this.dodajVM(vm1);
 		this.dodajVM(vm2);
+		this.dodajVM(vm3);
 
-		org.getResursi().add(vm1);
-		vm2.ugasi();
+		org2.getResursi().add(vm1);
+		o.getResursi().add(vm2);
+		org.getResursi().add(vm3);
+		vm3.upali();
 
 	}
 
@@ -329,7 +362,7 @@ public class  BazaPodataka {
 		}
 		System.out.println(k);
 		Collection<Disk> retVal = new ArrayList<>();
-		for(VM v : k.getOrganizacija().getResursi()){
+		for(VM v : this.organizacije.get(k.getOrganizacija()).getResursi()){
 			for(Disk d : v.getDiskovi())
 				retVal.add(d);
 		}
@@ -361,7 +394,6 @@ public class  BazaPodataka {
 	public Korisnik nadjiKorisnika(String mejl){
 		if(korisnici.containsKey(mejl))
 			return korisnici.get(mejl);
-
 		return null;
 	}
 
@@ -369,7 +401,7 @@ public class  BazaPodataka {
 //		if(!this.organizacije.containsKey(k.getOrganizacija().getIme()))
 //			return false;
 //		Organizacija org = this.organizacije.get(k.getOrganizacija().getIme());
-		organizacije.get(k.getOrganizacija().getIme()).dodajKorisnika(k);
+		organizacije.get(k.getOrganizacija()).dodajKorisnika(k);
 		korisnici.put(k.getEmail(),k);
 		return true;
 	}
@@ -391,7 +423,7 @@ public class  BazaPodataka {
 		if(!this.korisnici.containsKey(email))
 			return false;
 		Korisnik k = this.korisnici.get(email);
-		k.getOrganizacija().getKorisnici().remove(k);
+		organizacije.get(k.getOrganizacija()).getKorisnici().remove(k);
 		this.korisnici.remove(email);
 		return true;
 
@@ -403,7 +435,7 @@ public class  BazaPodataka {
 			return this.korisnici.values();
 		}
 		// Ako nije superadmin, vracamo samo korisnike koji pripadaju istoj organizaciji kao admin
-		return k.getOrganizacija().getKorisnici();
+		return this.organizacije.get(k.getOrganizacija()).getKorisnici();
 
 	}
 

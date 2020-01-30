@@ -15,7 +15,7 @@ Vue.component('vm-izmjena', {
             vmToEdit: {
                 ime: "",
                 tip: "",
-                organizacija: { ime: "" },
+                organizacija: "",
                 kategorija: { ime: "" },
                 listaAktivnosti: [{ upaljena: "", ugasena: "" }]
             },
@@ -40,7 +40,7 @@ Vue.component('vm-izmjena', {
 
     <div class="form-group">
     <label for="org">Organizacija</label>
-    <input type="text" class="form-control" id="org" v-model="vmToEdit.organizacija.ime" readonly>
+    <input type="text" class="form-control" id="org" v-model="vmToEdit.organizacija" readonly>
     </div>
 
 
@@ -122,7 +122,6 @@ Vue.component('vm-izmjena', {
 
 
             this.vmToEdit.diskovi = [...this.diskoviVM];
-            console.log(JSON.stringify(this.vmToEdit));
 
             axios
                 .put("/rest/vm/" + this.ime, JSON.stringify(this.vmToEdit))
@@ -236,25 +235,19 @@ Vue.component('vm-izmjena', {
             .catch(e => console.log(e));
 
         const diskoviVM = await axios.get("rest/vm/" + this.ime + "/diskovi");
-        const diskoviSvi = await axios.get("rest/diskovi/all/list");
+        const diskoviSvi = await axios.get("rest/diskovi/all");
         this.diskoviVM = diskoviVM.data;
         this.diskoviSvi = diskoviSvi.data;
 
         this.diskoviDostupni = diskoviSvi.data.filter(el => {
-            var valid = false;
+            var valid = true;
             this.diskoviVM.forEach(v => {
                 if (v.ime === el.ime) {
                     valid = false;
-                    return valid;
-                }
-                else {
-                    valid = true;
-                    return valid;
+                    return;
                 }
             });
             return valid;
         });
-
-
     }
 });

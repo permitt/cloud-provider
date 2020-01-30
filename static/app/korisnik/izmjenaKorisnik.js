@@ -12,7 +12,13 @@ Vue.component('korisnici-izmjena', {
                 password: ""
             },
             passwordError: false,
-            password2: ""
+            emailError: false,
+            roleError: false,
+            orgError: false,
+            firstNameError: false,
+            lastNameError: false,
+            passwordShortError: false,
+            password2: "",
         };
     },
     template: `
@@ -34,21 +40,24 @@ Vue.component('korisnici-izmjena', {
     <div class="form-group">
     <label for="ime">Ime</label>
     <input type="text" class="form-control" id="ime" v-model="userToEdit.ime" required>
+    <small style="color:red" v-if="firstNameError">Morate unijeti ime!</small>
     </div>
 
     <div class="form-group">
     <label for="prezime">Prezime</label>
     <input type="text" class="form-control" id="prezime" v-model="userToEdit.prezime" required>
+    <small style="color:red" v-if="lastNameError">Morate unijeti prezime!</small>
     </div>
 
     <div class="form-group">
         <label for="ime">Password</label>
         <input type="password" class="form-control" id="pw" v-model="userToEdit.password" required>
+        <small style="color:red" v-if="passwordShortError">Lozinka ne moze biti kraca od 6 karaktera!</small>
     </div>
     <div class="form-group">
         <label for="ime">Password ponovo</label>
         <input type="password" class="form-control" id="pw2" v-model="password2" required>
-        <small style="color:red" v-if="passwordError">Passwords don't match!</small>
+        <small style="color:red" v-if="passwordError">Lozinke se ne poklapaju!</small>
     </div>
     <div class="form-group">
     <label for="uloga">Uloga</label>
@@ -71,14 +80,51 @@ Vue.component('korisnici-izmjena', {
 `
     ,
     methods: {
+        resetErrors() {
+            this.firstNameError = false;
+            this.lastNameError = false;
+            this.emailError = false;
+            this.passwordError = false;
+            this.passwordShortError = false;
+            this.roleError = false;
+            this.orgError = false;
+
+        }
+        ,
+
         formValid() {
+            this.resetErrors();
+            let valid = true;
+
             if (this.password2 !== this.userToEdit.password) {
                 this.passwordError = true;
-                return false;
-            } else if (this.userToEdit.ime == "" || this.userToEdit.prezime == "" || this.password == "" || this.userToEdit.uloga == "")
-                return false;
-            else
-                return true;
+                valid = false;
+            }
+
+
+            if (this.userToEdit.ime == "") {
+                this.firstNameError = true;
+                valid = false;
+            }
+            if (this.userToEdit.prezime == "") {
+                this.lastNameError = true;
+                valid = false;
+            }
+            if (this.userToEdit.uloga == "") {
+                this.roleError = true;
+                valid = false;
+            }
+            if (this.userToEdit.organizacija == "") {
+                this.orgError = true;
+                valid = false;
+            }
+            if (this.userToEdit.password.length < 6) {
+                this.passwordShortError = true;
+                valid = false;
+            }
+
+            return valid;
+
         },
         sacuvaj() {
 

@@ -30,7 +30,7 @@ public class SparkMainApp {
         ucitajBazu();
 
         get("/",(req,res) ->{
-            System.out.println("POGPODJEN");
+
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
             if(k == null)
@@ -96,7 +96,7 @@ public class SparkMainApp {
 
         get("/rest/vm/:ime/diskovi",(req,res)->{
             String param = req.params("ime");
-            System.out.println(param);
+
             return gson.toJson(bp.getVirtualneMasine().get(param).getDiskovi());
         });
 
@@ -144,7 +144,7 @@ public class SparkMainApp {
 
             Session ss = req.session(true);
             Korisnik k = ss.attribute("korisnik");
-            System.out.println(k);
+
             if (k != null) {
                 ss.invalidate();
             }
@@ -360,7 +360,7 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");
             String payload = req.body();
-            System.out.println(payload);
+
 
             Disk novi = gson.fromJson(payload,Disk.class);
             if(!bp.unikatnoImeDiska(novi.getIme())){
@@ -378,6 +378,7 @@ public class SparkMainApp {
     public static void sacuvajBazu() throws IOException {
         try (Writer writer = new FileWriter("bazaPodataka.json")) {
             gson.toJson(bp, writer);
+            System.out.println("Uspjesno upisano u bazu.");
         }
     };
 

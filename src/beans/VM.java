@@ -10,14 +10,14 @@ public class VM {
 	private int RAM;
 	private int GPU;
 	private ArrayList<Disk> diskovi;
-	private Organizacija organizacija;
+	private String organizacija;
 	private ArrayList<Aktivnost> listaAktivnosti;
 	
 	public VM() {
 		
 	}
 	
-	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, Organizacija o,ArrayList<Aktivnost> ak) {
+	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String o,ArrayList<Aktivnost> ak) {
 		super();
 		this.ime = ime;
 		this.kategorija = kategorija;
@@ -39,11 +39,11 @@ public class VM {
 		ak.setUgasena(new Date());
 	}
 	
-	public Organizacija getOrganizacija() {
+	public String getOrganizacija() {
 		return organizacija;
 	}
 
-	public void setOrganizacija(Organizacija organizacija) {
+	public void setOrganizacija(String organizacija) {
 		this.organizacija = organizacija;
 	}
 

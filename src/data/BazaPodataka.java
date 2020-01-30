@@ -194,7 +194,7 @@ public class  BazaPodataka {
 		//treba razmisliti malo o tome
 		VM vm ;
 		if(unikatnoImeVM(ime)) {
-			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije),new ArrayList<Aktivnost>());
+			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije).getIme(),new ArrayList<Aktivnost>());
 			return "OK";
 		}
 		else {
@@ -205,7 +205,7 @@ public class  BazaPodataka {
 	public void obrisiVM(String ime) {
 		//otkaciti diskove koji su povezani sa VM koja se brise
 		for(Disk d : this.diskovi.values()) {
-			if(d.getVm().getIme().equals(ime)) {
+			if(d.getVm().equals(ime)) {
 				d.setVm(null);
 			}
 		}
@@ -220,7 +220,7 @@ public class  BazaPodataka {
 		vm.setDiskovi(nova.getDiskovi());
 		vm.setListaAktivnosti(nova.getListaAktivnosti());
 		for(var d : vm.getDiskovi())
-			d.setVm(vm);
+			d.setVm(vm.getIme());
 		this.virtualneMasine.remove(ime);
 		this.virtualneMasine.put(vm.getIme(),vm);
 		return true;
@@ -258,9 +258,9 @@ public class  BazaPodataka {
 		KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
 		this.dodajKategoriju(kat2);
 		this.dodajKategoriju(kat1);
-		Disk d1 = new Disk("exp","HDD",480,org,null);
-		Disk d2 = new Disk("forceX10","SDD",920,org,null);
-		Disk d3 = new Disk("dragon9","SDD",256,org,null);
+		Disk d1 = new Disk("exp","HDD",480,org.getIme(),null);
+		Disk d2 = new Disk("forceX10","SDD",920,org.getIme(),null);
+		Disk d3 = new Disk("dragon9","SDD",256,org.getIme(),null);
 		ArrayList<Disk> diskovi = new ArrayList<Disk>();
 		diskovi.add(d1);
 		diskovi.add(d2);
@@ -275,13 +275,13 @@ public class  BazaPodataka {
 		Date kraj2 = sdf.parse("05-01-2020 10:25:10");
 		akt.add(new Aktivnost(pocetak,new Date()));
 		akt.add(new Aktivnost(pocetak2,kraj2));
-		VM vm1 = new VM("VM1",kat1,diskovi,o,new ArrayList<Aktivnost>());
-		VM vm2 = new VM("VM2",kat2,diskovi2,o,akt);
+		VM vm1 = new VM("VM1",kat1,diskovi,o.getIme(),new ArrayList<Aktivnost>());
+		VM vm2 = new VM("VM2",kat2,diskovi2,o.getIme(),akt);
 		vm2.upali();
 
-		d1.setVm(vm1);
-		d2.setVm(vm1);
-		d3.setVm(vm2);
+		d1.setVm(vm1.getIme());
+		d2.setVm(vm1.getIme());
+		d3.setVm(vm2.getIme());
 		this.diskovi.put(d1.getIme(),d1);
 		this.diskovi.put(d2.getIme(),d2);
 		this.diskovi.put(d3.getIme(),d3);
@@ -308,7 +308,7 @@ public class  BazaPodataka {
 	}
 
 	public void dodajDisk(Disk d){
-		virtualneMasine.get(d.getVm().getIme()).getDiskovi().add(d);
+		virtualneMasine.get(d.getVm()).getDiskovi().add(d);
 		diskovi.put(d.getIme(),d);
 	}
 

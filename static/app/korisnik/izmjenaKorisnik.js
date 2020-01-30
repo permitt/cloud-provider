@@ -28,7 +28,7 @@ Vue.component('korisnici-izmjena', {
       </div>
     <div class="form-group">
       <label for="organizacija">Organizacija</label>
-      <input type="text" class="form-control" id="organizacija" v-model="userToEdit.organizacija.ime" readonly/>
+      <input type="text" class="form-control" id="organizacija" v-model="userToEdit.organizacija" readonly/>
     </div>
 
     <div class="form-group">

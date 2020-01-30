@@ -58,7 +58,7 @@ Vue.component("vm-tabela", {
 		<td>{{vm.brojJezgara}}</td>
 		<td>{{vm.RAM}}</td>
 		<td>{{vm.GPU}}</td>
-		<td>{{vm.organizacija.ime}}</td>
+		<td>{{vm.organizacija}}</td>
 	</tr>
 	</tbody>
 </table>

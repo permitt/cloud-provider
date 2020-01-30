@@ -6,12 +6,12 @@ public class Disk {
     private String ime;
     private String tip;
     private int kapacitet;
-    private Organizacija organizacija;
-    private transient VM vm;
+    private String organizacija;
+    private String vm;
 
 
 
-    public Disk(String ime, String tip, int kapacitet, Organizacija org, VM vm) {
+    public Disk(String ime, String tip, int kapacitet, String org, String vm) {
         this.ime = ime;
         this.tip = tip;
         this.kapacitet = kapacitet;
@@ -43,19 +43,19 @@ public class Disk {
         this.kapacitet = kapacitet;
     }
 
-    public VM getVm() {
+    public String getVm() {
         return vm;
     }
 
-    public void setVm(VM vm) {
+    public void setVm(String vm) {
         this.vm = vm;
     }
 
-    public Organizacija getOrganizacija() {
+    public String getOrganizacija() {
         return organizacija;
     }
 
-    public void setOrganizacija(Organizacija org) {
+    public void setOrganizacija(String org) {
         this.organizacija = org;
     }
 }

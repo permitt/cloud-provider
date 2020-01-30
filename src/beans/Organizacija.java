@@ -7,8 +7,8 @@ public class Organizacija {
 	private String ime;
 	private String opis;
 	private String logo;
-	private transient ArrayList<Korisnik> korisnici;
-	private transient ArrayList<VM> resursi;
+	private  ArrayList<Korisnik> korisnici;
+	private  ArrayList<VM> resursi;
 	
 	public Organizacija() {
 		this.ime= "NLB banka";

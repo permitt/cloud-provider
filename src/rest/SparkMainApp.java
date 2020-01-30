@@ -86,7 +86,7 @@ public class SparkMainApp {
             }
 
             // Admin  moze mijenjati samo iz svoje organizacije
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(vm.getOrganizacija().getIme());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(vm.getOrganizacija());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
                 res.status(403);
@@ -327,7 +327,7 @@ public class SparkMainApp {
             }
 
             // Admin  moze mijenjati samo iz svoje organizacije
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija().getIme());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija());
 
             if(ulogovan.getUloga().equals("korisnik") || priv){
                 res.status(403);
@@ -348,7 +348,7 @@ public class SparkMainApp {
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");
 
-            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija().getIme());
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(d.getOrganizacija());
 
 
             if(ulogovan.getUloga().equals("korisnik") || priv){

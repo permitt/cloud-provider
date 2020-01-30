@@ -32,7 +32,7 @@ Vue.component('diskovi-izmjena', {
 
     <div class="form-group">
     <label for="org">Organizacija</label>
-    <input type="text" class="form-control" id="org" v-model="diskToEdit.organizacija.ime" readonly>
+    <input type="text" class="form-control" id="org" v-model="diskToEdit.organizacija" readonly>
     </div>
 
 

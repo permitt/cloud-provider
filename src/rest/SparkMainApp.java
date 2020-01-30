@@ -55,6 +55,13 @@ public class SparkMainApp {
             return gson.toJson(bp.getVirtualneMasine().get(ime));
 
         });
+        get("rest/vm/kategorija/:imeVM",(req,res) ->{
+            res.type("application/json");
+            String imeVM = req.params("imeVM");
+            return gson.toJson(bp.getVirtualneMasine().get(imeVM).getKategorija());
+
+        });
+        
 
         get("/rest/kategorija/all",(req,res) ->{
             res.type("application/json");

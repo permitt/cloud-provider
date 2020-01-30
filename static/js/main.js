@@ -1,7 +1,7 @@
 const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
 const VMTabela = { template: '<vm-tabela></vm-tabela>' };
-const VMdetalji = { template: '<vm-detalji></vm-detalji>' };
+const VMizmjena = { template: '<vm-izmjena></vm-izmjena>' }
 const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
 const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
@@ -14,7 +14,7 @@ const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/', component: VMTabela },
-        { path: '/vm/:ime', component: VMdetalji },
+        { path: '/vm/:ime', component: VMizmjena },
         { path: '/korisnici', component: korisniciTabela },
         { path: '/korisnici/novi', component: noviKorisnik },
         { path: '/korisnici/:email', component: korisniciIzmjena },

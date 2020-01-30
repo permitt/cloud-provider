@@ -20,7 +20,7 @@ Vue.component('novi-disk', {
     template: `
         
 <div class="container">
-<div class="col-lg-8 mx-auto" style="margin-top:30px">
+<div class="col-lg-8 mx-auto" style="margin:30px 0;">
     <h3>Novi disk</h3>
     <form>
 
@@ -72,6 +72,8 @@ Vue.component('novi-disk', {
             let valid = true;
             this.imeError = false;
             this.imeUnikatError = false;
+            this.vmError = false;
+
             if (this.diskToAdd.ime == "") {
                 this.imeError = true;
                 valid = false;

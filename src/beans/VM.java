@@ -9,7 +9,7 @@ public class VM {
 	private int brojJezgara;
 	private int RAM;
 	private int GPU;
-	private transient ArrayList<Disk> diskovi;
+	private ArrayList<Disk> diskovi;
 	private Organizacija organizacija;
 	private ArrayList<Aktivnost> listaAktivnosti;
 	
@@ -17,7 +17,7 @@ public class VM {
 		
 	}
 	
-	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, Organizacija o) {
+	public VM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, Organizacija o,ArrayList<Aktivnost> ak) {
 		super();
 		this.ime = ime;
 		this.kategorija = kategorija;
@@ -26,7 +26,17 @@ public class VM {
 		this.brojJezgara = this.kategorija.getBrojJezgara();
 		this.RAM = this.kategorija.getRAM();
 		this.organizacija = o;
-		this.listaAktivnosti = new ArrayList<Aktivnost>();
+		this.listaAktivnosti = ak;
+	}
+
+
+	public void upali(){
+		this.listaAktivnosti.add(new Aktivnost(new Date()));
+	}
+
+	public void ugasi(){
+		Aktivnost ak = this.listaAktivnosti.get(this.listaAktivnosti.size()-1);
+		ak.setUgasena(new Date());
 	}
 	
 	public Organizacija getOrganizacija() {
@@ -56,6 +66,9 @@ public class VM {
 	}
 	public void setKategorija(KategorijaVM kategorija) {
 		this.kategorija = kategorija;
+		this.brojJezgara = kategorija.getBrojJezgara();
+		this.setRAM(kategorija.getRAM());
+		this.setGPU(kategorija.getGPU());
 	}
 	public int getBrojJezgara() {
 		return brojJezgara;

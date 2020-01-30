@@ -18,7 +18,7 @@ Vue.component("diskovi-tabela", {
 		<th>&nbsp;</th>
 	</tr>
 		
-	<tr v-for="d in diskovi">
+	<tr v-for="d in diskovi" >
 		<td>{{d.ime}}</td>
         <td>{{d.kapacitet}}</td>
         <td>{{d.tip}}</td>

@@ -3,23 +3,26 @@ package rest;
 import beans.*;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import data.BazaPodataka;
 import spark.Session;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 import static spark.Spark.*;
 import beans.VM;
 public class SparkMainApp {
 
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder().setDateFormat("EEE MMM dd yyyy HH:mm:ss").create();
+
     private static BazaPodataka bp = new BazaPodataka();
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         //PROMENILA SAM
@@ -38,14 +41,17 @@ public class SparkMainApp {
         get("/rest/vm/all",(req,res) ->{
             res.type("application/json");
             Session ss = req.session(true);
-            Korisnik k = ss.attribute("korisnik");
-            String uloga = k.getUloga();
+            Korisnik ulogovan = ss.attribute("korisnik");
+            if(ulogovan == null){
+                res.status(403);
+                return res;
+            }
 
-            if(uloga.equals("superadmin")) {
+            if(ulogovan.getUloga().equals("superadmin")) {
                 return gson.toJson(bp.dobaviListuVM(null));
             }
             else {
-                return gson.toJson(bp.dobaviListuVM(k));
+                return gson.toJson(bp.dobaviListuVM(ulogovan));
             }
         });
 
@@ -54,6 +60,51 @@ public class SparkMainApp {
             String ime = req.params("ime");
             return gson.toJson(bp.getVirtualneMasine().get(ime));
 
+        });
+
+        put("/rest/vm/:ime",(req,res) -> {
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            String param = req.params("ime");
+
+            String payload = req.body();
+
+            VM vm = gson.fromJson(payload,VM.class);
+
+            // Kreiraj diskove posebno ovdje
+//            HashMap<String, Object> mapa = gson.fromJson(payload, new TypeToken<HashMap<String, Object>>() {}.getType());
+//            System.out.println(mapa);
+//            System.out.println(mapa.get("diskovi"));
+//            List<Disk> d = gson.fromJson(mapa.get("diskovi").toString(),new TypeToken<List<Disk>>(){}.getType());
+//            System.out.println(d.size());
+
+
+            //Provjera da li je mijenjano ime i da li je unikatno
+            if(!vm.getIme().equals(param) && !bp.unikatnoImeVM(vm.getIme())){
+                res.status(400);
+                return res;
+            }
+
+            // Admin  moze mijenjati samo iz svoje organizacije
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().getIme().equals(vm.getOrganizacija().getIme());
+
+            if(ulogovan.getUloga().equals("korisnik") || priv){
+                res.status(403);
+                return res;
+            }
+
+
+            if(!bp.izmjeniVM(param,vm))
+                return "Failed";
+
+            return "OK";
+
+        });
+
+        get("/rest/vm/:ime/diskovi",(req,res)->{
+            String param = req.params("ime");
+            System.out.println(param);
+            return gson.toJson(bp.getVirtualneMasine().get(param).getDiskovi());
         });
 
         get("/rest/kategorija/all",(req,res) ->{
@@ -186,18 +237,6 @@ public class SparkMainApp {
             return "OK";
         });
 
-        post("/rest/vm/:imeVM",(req,res)->{
-
-            String param = req.params("imeVM");
-
-            String payload = req.body();
-            VM vmasina = gson.fromJson(payload,VM.class);
-
-            if(bp.izmeniVM(vmasina, param).equals("OK"))
-            	return "OK";
-            return "Failed";
-
-        });
 
         post("/rest/users",(req,res)->{
            Session ss = req.session(true);
@@ -250,6 +289,11 @@ public class SparkMainApp {
                 return gson.toJson(bp.dobaviDiskove(null));
 
             return gson.toJson(bp.dobaviDiskove(k));
+        });
+
+        get("/rest/diskovi/all/list",(req,res)->{
+            res.type("application/json");
+            return gson.toJson(bp.dobaviDiskove(null));
         });
 
         get("/rest/diskovi/:ime",(req,res)->{

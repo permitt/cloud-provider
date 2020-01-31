@@ -6,99 +6,40 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
 
-    <script src="jquery.js"></script>
+    <script src="js/jquery.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
-    <script src="axios.min.js"></script>
-    <script src="vue.js"></script>
-    <script src="main.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+
 
 </head>
 
 <body>
-    <div id="MainApp">
-        <h2>Prijava</h2>
-        <table>
-            <form id="loginForm">
-                <tr>
-                    <td>Korisničko ime</td>
-                    <td><input required id="username" type="text" name="txt_username"></td>
-                </tr>
-                <tr>
-                    <td>Lozinka</td>
-                    <td><input required id="pw" type="password" name="txt_password"></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><input type="button" name="btn_login" value="Prijava" onclick="login()" id="dugme"></td>
-                </tr>
-            </form>
-        </table>
+    <div id="app">
+        <nav-bar></nav-bar>
+        <router-view></router-view>
+
     </div>
-</body>
-
-</html>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <title>Prijava</title>
-    <script src="jquery.min.js"></script>
-    <script type="text/javascript">
-
-
-        function login() {
-
-            let user = $("#username").val();
-            let pw = $("#pw").val();
-            if (user == "" || pw == "") {
-                alert("Field can't be empty!");
-                return;
-            }
 
 
 
-            $.ajax({
-                url: "rest/login",
-                type: "POST",
-                data: JSON.stringify({
-                    "username": user,
-                    "password": pw
-                }),
-                contentType: "application/json",
-                dataType: "json",
-                complete: function (data) {
-                    console.log(data);
-                    if (data.responseText == "OK") {
-                        window.location.replace(data.getResponseHeader("Location"));
-                    } else {
-                        alert("Wrong username/password combo!");
-                    }
-                }
-            });
-        }
-    </script>
-</head>
 
-<body>
-    <h2>Prijava</h2>
-    <table>
-        <form id="loginForm">
-            <tr>
-                <td>Korisničko ime</td>
-                <td><input required id="username" type="text" name="txt_username"></td>
-            </tr>
-            <tr>
-                <td>Lozinka</td>
-                <td><input required id="pw" type="password" name="txt_password"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="button" name="btn_login" value="Prijava" onclick="login()" id="dugme"></td>
-            </tr>
-        </form>
-    </table>
+    <script src="app/navbar.js"></script>
+    <script src="app/korisnik/korisniciTabela.js"></script>
+    <script src="app/korisnik/izmjenaKorisnik.js"></script>
+    <script src="app/korisnik/profil.js"></script>
+    <script src="app/korisnik/noviKorisnik.js"></script>
+    <script src="app/disk/diskoviTabela.js"></script>
+    <script src="app/disk/izmjenaDisk.js"></script>
+    <script src="app/disk/noviDisk.js"></script>
+    <script src="app/VM/VMTabela.js"></script>
+    <script src="app/VM/izmjenaVM.js"></script>
+    <script src="app/login.js"></script>
+    <script src="app/app.js"></script>
+
+    <script src="js/main.js"></script>
 </body>
 
 </html>

@@ -38,10 +38,9 @@ Vue.component("vm-tabela", {
     <label class="col-lg-3" for="searchtxt">Naziv VM &nbsp;</label>
     <input v-model="searchText" @input="filter()" id="searchtxt" style="margin-right:10px" type="text" /> <button v-on:click="filter()" class="btn btn-primary" type="button" value="Filter">Filter</button>
     </div>
-    
-
+ 
     </form>
-
+<div>
     <table class="table table-hover">
 	<thead>
 	<tr bgcolor="lightgrey">
@@ -62,10 +61,12 @@ Vue.component("vm-tabela", {
 	</tr>
 	</tbody>
 </table>
-	<p>
-		<a v-if="currentUser.uloga != 'korisnik'" class="btn btn-outline-primary" href="#/dodajVM">Dodaj VM</a>
+</div>
+<p>
+		<a v-if="currentUser.uloga != 'korisnik'" class="btn btn-outline-primary" href="#/vm/nova">Dodaj VM</a>
     </p>
     </div>
+    
 </div>		  	  
 `
     ,

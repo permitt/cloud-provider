@@ -87,7 +87,7 @@ public class  BazaPodataka {
 		}
 		
 	}
-	//treba napraviti ====> dodajKorisnika, dodajVM, dodajDisk 
+	 
 	
 	public Organizacija nadjiOrganizaciju(String ime) {
 		if (this.organizacije.containsKey(ime)) {
@@ -168,6 +168,7 @@ public class  BazaPodataka {
 	}
 
 	public void dodajVM(VM vm) {
+		//organizacije.get(vm.getOrganizacija().getIme()).getResursi().add(vm);
 		this.virtualneMasine.put(vm.getIme(), vm);
 	}
 	public Collection<VM> dobaviListuVM(Korisnik k){
@@ -190,8 +191,7 @@ public class  BazaPodataka {
 
 
 	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String imeOrganizacije) {
-		//ne znam jos kako da proveravam parametre, kako da vracam sta nije dobro
-		//treba razmisliti malo o tome
+		
 		VM vm ;
 		if(unikatnoImeVM(ime)) {
 			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije),new ArrayList<Aktivnost>());

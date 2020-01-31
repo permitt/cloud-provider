@@ -61,12 +61,18 @@ public class SparkMainApp {
             return gson.toJson(bp.getVirtualneMasine().get(ime));
 
         });
-        get("rest/vm/kategorija/:imeVM",(req,res) ->{
+        get("/rest/vm/nova/diskovi",(req,res) ->{
+            res.type("application/json");
+            
+            return gson.toJson(bp.getDiskovi());
+
+        });
+       /* get("rest/vm/kategorija/:imeVM",(req,res) ->{
             res.type("application/json");
             String imeVM = req.params("imeVM");
             return gson.toJson(bp.getVirtualneMasine().get(imeVM).getKategorija());
 
-        });
+        });*/
         
 
         put("/rest/vm/:ime",(req,res) -> {
@@ -381,6 +387,27 @@ public class SparkMainApp {
                 return res;
             }
             bp.dodajDisk(novi);
+            return "OK";
+        });
+        
+        post("/rest/addVm",(req,res)->{
+        	
+            Session ss = req.session(true);
+            
+            Korisnik ulogovan = ss.attribute("korisnik");
+            Organizacija org = ulogovan.getOrganizacija();
+            String payload = req.body();
+            System.out.println("USO");
+            System.out.println(payload);
+
+            VM nova = gson.fromJson(payload,VM.class);
+            System.out.println(nova.getIme());
+            nova.setOrganizacija(org);
+            if(!bp.unikatnoImeVM(nova.getIme())){
+                res.status(400);
+                return res;
+            }
+            bp.dodajVM(nova);
             return "OK";
         });
 

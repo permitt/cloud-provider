@@ -2,7 +2,7 @@ const navBar = { template: '<nav-bar></nav-bar>' };
 const logIn = { template: '<log-in></log-in>' };
 const VMTabela = { template: '<vm-tabela></vm-tabela>' };
 const VMizmjena = { template: '<vm-izmjena></vm-izmjena>' }
-const novaVM = {teplate : '<nova-vm></nova-vm>'};
+const novaVM = { template: '<nova-vm></nova-vm>' };
 const korisniciTabela = { template: '<korisnici-tabela></korisnici-tabela>' };
 const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' };
 const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
@@ -10,18 +10,18 @@ const profil = { template: '<profil></profil>' };
 const diskoviTabela = { template: '<diskovi-tabela></diskovi-tabela>' };
 const diskoviIzmjena = { template: '<diskovi-izmjena></diskovi-izmjena>' };
 const noviDisk = { template: '<novi-disk></novi-disk>' };
-const kategorijeTabela = {template:'<kategorija-tabela></kategorija-tabela>'};
-const kategorijeIzmena= {template:'<kategorija-izmena></kategorija-izmena>'};
-const novaKategorija = {template:'<nova-kategorija></nova-kategorija>'};
-const organizacijeTabela = {template:'<organizacija-tabela></organizacija-tabela>'};
-const organizacijeIzmena= {template:'<organizacija-izmena></organizacija-izmena>'};
-const novaOrganizacija = {template:'<nova-organizacija></nova-organizacija>'};
+const kategorijeTabela = { template: '<kategorija-tabela></kategorija-tabela>' };
+const kategorijeIzmena = { template: '<kategorija-izmena></kategorija-izmena>' };
+const novaKategorija = { template: '<nova-kategorija></nova-kategorija>' };
+const organizacijeTabela = { template: '<organizacija-tabela></organizacija-tabela>' };
+const organizacijeIzmena = { template: '<organizacija-izmena></organizacija-izmena>' };
+const novaOrganizacija = { template: '<nova-organizacija></nova-organizacija>' };
 
 const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/', component: VMTabela },
-        {path : '/vm/nova',component: novaVM},
+        { path: '/vm/nova', component: novaVM },
         { path: '/vm/:ime', component: VMizmjena },
         { path: '/korisnici', component: korisniciTabela },
         { path: '/korisnici/novi', component: noviKorisnik },
@@ -31,10 +31,10 @@ const router = new VueRouter({
         { path: '/diskovi/:ime', component: diskoviIzmjena },
         { path: '/kategorije', component: kategorijeTabela },
         { path: '/kategorije/nova', component: novaKategorija },
-        { path: '/kategorije/:ime', component: kategorijeIzmena},
+        { path: '/kategorije/:ime', component: kategorijeIzmena },
         { path: '/organizacije', component: organizacijeTabela },
         { path: '/organizacije/nova', component: novaOrganizacija },
-        { path: '/organizacije/:ime', component: organizacijeIzmena},
+        { path: '/organizacije/:ime', component: organizacijeIzmena },
         { path: '/profil', component: profil },
         { path: '/login', component: logIn }
     ]

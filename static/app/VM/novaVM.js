@@ -1,26 +1,26 @@
-Vue.component('nova-vm',{
-	data: function(){
-		return {
-			currentUser: "",
+Vue.component('nova-vm', {
+    data: function () {
+        return {
+            currentUser: "",
             vmToAdd: {
                 ime: "",
-                kategorija:{ ime: "" },
-                diskovi : [],
-                organizacija:{ ime: "" }
-                },
+                kategorija: { ime: "" },
+                diskovi: [],
+                organizacija: { ime: "" }
+            },
             imeUnikatError: false,
             imeError: false,
             kategorijaError: false,
-            sviDiskovi:[],
-            kategorije:[],
-            organizacije:[],
-            ulogovanSuperadmin : false,
-            
-            
-		};
-	},
-	template:
-		`
+            sviDiskovi: [],
+            kategorije: [],
+            organizacije: [],
+            ulogovanSuperadmin: false,
+
+
+        };
+    },
+    template:
+        `
 		<div class="container">
 				
 			<div class="col-lg-8 mx-auto" style="margin:30px 0;">
@@ -59,12 +59,12 @@ Vue.component('nova-vm',{
 			</div>
 		</div>
 	`
-	,
-	methods:{
-		
-		formValid() {
+    ,
+    methods: {
+
+        formValid() {
             let valid = true;
-          
+
             this.imeError = false;
             this.imeUnikatError = false;
             this.kategorijaError = false;
@@ -79,9 +79,9 @@ Vue.component('nova-vm',{
             	this.kategorijaError = true;
             	valid = false;
             } */
-           
-              
-            
+
+
+
 
             return valid;
         },
@@ -90,16 +90,16 @@ Vue.component('nova-vm',{
             if (!this.formValid())
                 return;
 
-           this.kategorije.map(k => {
+            this.kategorije.map(k => {
                 if (k.ime == this.vmToAdd.kategorija.ime)
-                    this.vmToAdd.kategroija=k;
+                    this.vmToAdd.kategroija = k;
             });
-            
-           this.organizacije.map(o => {
-               if (o.ime == this.vmToAdd.organizacija.ime)
-                   this.vmToAdd.organizacija=o;
-           });
-          
+
+            this.organizacije.map(o => {
+                if (o.ime == this.vmToAdd.organizacija.ime)
+                    this.vmToAdd.organizacija = o;
+            });
+
             axios
                 .post("/rest/vm", JSON.stringify(this.vmToAdd))
                 .then(response => {
@@ -110,25 +110,25 @@ Vue.component('nova-vm',{
                         this.imeUnikatError = true;
                 });
         },
-		      
-	},
- mounted() {
+
+    },
+    mounted() {
         axios.get('rest/users/current')
             .then(response => {
-            	this.currentUser = response.data.uloga;
-            	if(this.currentUser=="superadmin"){
-            		this.ulogovanSuperadmin = true;
-            	}
-            	
+                this.currentUser = response.data.uloga;
+                if (this.currentUser == "superadmin") {
+                    this.ulogovanSuperadmin = true;
+                }
+
             });
-        axios.get('rest/diskovi/all/list')
-        .then(response => (this.sviDiskovi = response.data));
+        axios.get('rest/diskovi/all')
+            .then(response => (this.sviDiskovi = response.data));
         axios.get('/rest/kategorija/all')
-        .then(response => (this.kategorije = response.data));
+            .then(response => (this.kategorije = response.data));
         axios.get('/rest/organizacije/all')
-        .then(response => (this.organizacije = response.data));
-        
-       
-         
+            .then(response => (this.organizacije = response.data));
+
+
+
     }
 });

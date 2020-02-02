@@ -63,7 +63,7 @@ Vue.component("vm-tabela", {
 	</tbody>
 </table>
 	<p>
-		<a v-if="currentUser.uloga != 'korisnik'" class="btn btn-outline-primary" href="#/dodajVM">Dodaj VM</a>
+		<a v-if="currentUser.uloga != 'korisnik'" class="btn btn-outline-primary" href="#/vm/nova">Dodaj VM</a>
     </p>
     </div>
 </div>		  	  

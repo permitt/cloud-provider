@@ -72,11 +72,19 @@ public class SparkMainApp {
 
             VM vm = gson.fromJson(payload,VM.class);
 
+            //Provjera da li je prazno polje
+            if(!vm.getIme().equals("") || vm.getOrganizacija().equals("") || vm.getKategorija().getIme().equals("")){
+                res.status(400);
+                return res;
+            }
+
             //Provjera da li je mijenjano ime i da li je unikatno
             if(!vm.getIme().equals(param) && !bp.unikatnoImeVM(vm.getIme())){
                 res.status(400);
                 return res;
             }
+
+
 
             // Admin  moze mijenjati samo iz svoje organizacije
             boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(vm.getOrganizacija());
@@ -96,12 +104,27 @@ public class SparkMainApp {
 
         get("/rest/vm/:ime/diskovi",(req,res)->{
             String param = req.params("ime");
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
 
+            if(ulogovan.getUloga().equals("korisnik")){
+                res.status(403);
+                return res;
+            }
             return gson.toJson(bp.getVirtualneMasine().get(param).getDiskovi());
         });
 
         get("/rest/kategorija/all",(req,res) ->{
             res.type("application/json");
+            String param = req.params("ime");
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+
+            if(ulogovan.getUloga().equals("korisnik")){
+                res.status(403);
+                return res;
+            }
+
             return gson.toJson(bp.getKategorije().values());
 
         });
@@ -130,9 +153,9 @@ public class SparkMainApp {
             String password = mapa.get("password").toString();
             Korisnik k = bp.nadjiKorisnika(mapa.get("email").toString());
             if(k == null) {
-                return "User does not exist.";
+                return "Korisnik ne postoji.";
             }else if(!k.getPassword().equals(password)){
-                return "Wrong email/password combination.";
+                return "Pogresna kombinacija lozinke i imena.";
             }
             ss.attribute("korisnik",k);
             sacuvajBazu();
@@ -183,7 +206,7 @@ public class SparkMainApp {
             Korisnik k = bp.nadjiKorisnika(param);
             if(k == null){
                 res.status(400);
-                res.body("User with that email was not found.");
+                res.body("Nije nadjen korisnik s tim mejlom.");
                 return res;
             }
 
@@ -292,7 +315,12 @@ public class SparkMainApp {
 
         get("/rest/diskovi/:ime",(req,res)->{
             res.type("application/json");
-
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            if(ulogovan.getUloga().equals("korisnik")){
+                res.status(403);
+                return res;
+            }
             String param = req.params("ime");
             Disk d = bp.nadjiDisk(param);
             if(d == null){

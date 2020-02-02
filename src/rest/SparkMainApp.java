@@ -77,6 +77,7 @@ public class SparkMainApp {
             }
 
             bp.dodajOrganizaciju(nova);
+            sacuvajBazu();
              return "OK";
          });
         post("/rest/organizacije/dodaj",(req,res)->{
@@ -105,6 +106,7 @@ public class SparkMainApp {
             }
 
             bp.dodajOrganizaciju(org);
+            sacuvajBazu();
             return "OK";
          });
         put("/rest/organizacije/:ime",(req,res)->{
@@ -134,6 +136,7 @@ public class SparkMainApp {
             if(!bp.izmeniOrganizaciju(param,org)) {
             	System.out.println("jes obde?");
             	return "Failed";}
+            sacuvajBazu();
             return "OK";
            
          });
@@ -155,6 +158,7 @@ public class SparkMainApp {
             }
             if(!bp.izmeniKategoriju(param,k))
                 return "Failed";
+            sacuvajBazu();
             return "OK";
         });
 
@@ -184,6 +188,7 @@ public class SparkMainApp {
                 return res;
             }
             bp.dodajKategoriju(nova);
+            sacuvajBazu();
             return "OK";
         });
         delete("/rest/kategorije/:ime",(req,res) -> {
@@ -202,7 +207,7 @@ public class SparkMainApp {
             	res.status(400);
                 return "Failed!";
                 }
-
+            sacuvajBazu();
             return "OK";
         });
         
@@ -268,6 +273,7 @@ public class SparkMainApp {
                 return res;
             }
             bp.dodajVM(nova);
+            sacuvajBazu();
             return "OK";
         });
         put("/rest/vm/:ime",(req,res) -> {

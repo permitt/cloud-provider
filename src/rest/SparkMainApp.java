@@ -8,10 +8,14 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import data.BazaPodataka;
 import spark.Session;
+import spark.utils.IOUtils;
 
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
 
 import static spark.Spark.*;
 import beans.VM;
@@ -25,10 +29,188 @@ public class SparkMainApp {
     public static void main(String[] args) throws IOException, ParseException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
-        //PROMENILA SAM
-        //bp.napuniBazu();
+        
         ucitajBazu();
+        //ORGANIZACIJE
+        get("/rest/organizacije/all",(req,res) ->{
+            res.type("application/json");
+            return gson.toJson(bp.dobaviOrganizacije());
 
+        });
+       
+
+
+        get("/rest/organizacije/all",(req,res)->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            res.type("application/json");
+            if(ulogovan.getUloga().equals("superadmin")){
+                return gson.toJson(bp.dobaviOrganizacije());
+            }else if(ulogovan.getUloga().equals("admin")){
+                return gson.toJson(ulogovan.getOrganizacija());
+            }else{
+                res.status(403);
+                return res;
+            }
+
+        });
+
+       
+        get("/rest/organizacije/:ime",(req,res) ->{
+            String param = req.params("ime");
+            Organizacija o = bp.nadjiOrganizaciju(param);
+          
+            res.type("application/json");
+            return gson.toJson(o);
+
+        });
+
+
+       
+        post("/rest/organizacije",(req,res)->{
+          
+            String payload = req.body();
+            Organizacija nova = gson.fromJson(payload,Organizacija.class);
+            if(!bp.unikatnoImeOrg(nova.getIme())){
+                res.status(400);
+                return res;
+            }
+
+            bp.dodajOrganizaciju(nova);
+             return "OK";
+         });
+        post("/rest/organizacije/dodaj",(req,res)->{
+        	req.attribute("org.eclipse.jetty.multipartConfig",new MultipartConfigElement("/temp"));
+            Part filePart = req.raw().getPart("i_file");
+            
+            String imePart = req.queryParams("ime");
+            String opisPart = req.queryParams("opis");
+           
+            try(InputStream is = filePart.getInputStream()){
+            	OutputStream os = new FileOutputStream(
+            			"././static/images/"+filePart.getSubmittedFileName());
+            	IOUtils.copy(is, os);
+            	os.close();
+            }
+            System.out.println(filePart.getSubmittedFileName());
+            Organizacija org = new Organizacija();
+            org.setIme(imePart);
+            org.setOpis(opisPart);
+            org.setLogo("images/"+filePart.getSubmittedFileName());
+            
+            
+            if(!bp.unikatnoImeOrg(org.getIme())){
+                res.status(400);
+                return res;
+            }
+
+            bp.dodajOrganizaciju(org);
+            return "OK";
+         });
+        put("/rest/organizacije/:ime",(req,res)->{
+        	req.attribute("org.eclipse.jetty.multipartConfig",new MultipartConfigElement("/temp"));
+            Part filePart = req.raw().getPart("i_file");
+            
+            String imePart = req.queryParams("organizacija.ime");
+            String opisPart = req.queryParams("organizacija.opis");
+           
+            try(InputStream is = filePart.getInputStream()){
+            	OutputStream os = new FileOutputStream(
+            			"././static/images/"+filePart.getSubmittedFileName());
+            	IOUtils.copy(is, os);
+            	os.close();
+            }
+            Organizacija org = new Organizacija();
+            org.setIme(imePart);
+            org.setOpis(opisPart);
+            org.setLogo("images/"+filePart.getSubmittedFileName());
+            String param = req.params("ime");
+            if(org.getIme()!=null) {
+            	if(!org.getIme().equals(param) && !bp.unikatnoImeOrg(org.getIme())){
+            		res.status(400);
+            		return res;
+            	}
+            }
+            if(!bp.izmeniOrganizaciju(param,org)) {
+            	System.out.println("jes obde?");
+            	return "Failed";}
+            return "OK";
+           
+         });
+        //KATEGORIJE
+        get("/rest/kategorija/all",(req,res) ->{
+            res.type("application/json");
+            return gson.toJson(bp.dobaviKategorije());
+
+        });
+        put("/rest/kategorije/:ime",(req,res)->{
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+            String param = req.params("ime");
+            String payload = req.body();
+            KategorijaVM k = gson.fromJson(payload,KategorijaVM.class);
+            if(!k.getIme().equals(param) && !bp.unikatnoImeKat(k.getIme())){
+                res.status(400);
+                return res;
+            }
+            if(!bp.izmeniKategoriju(param,k))
+                return "Failed";
+            return "OK";
+        });
+
+        get("/rest/kategorije/:ime",(req,res)->{
+            res.type("application/json");
+
+            String param = req.params("ime");
+            KategorijaVM k = bp.nadjiKategoriju(param);
+            System.out.println(k.getIme());
+            if(k == null){
+                res.status(400);
+                res.body("Kategorija s tim imenom ne postoji.");
+                return res;
+            }
+
+            res.type("application/json");
+            return gson.toJson(k);
+
+        });
+        post("/rest/kategorije",(req,res)->{
+            String payload = req.body();
+            System.out.println(payload);
+
+            KategorijaVM nova = gson.fromJson(payload,KategorijaVM.class);
+            if(!bp.unikatnoImeKat(nova.getIme())){
+                res.status(400);
+                return res;
+            }
+            bp.dodajKategoriju(nova);
+            return "OK";
+        });
+        delete("/rest/kategorije/:ime",(req,res) -> {
+            String param = req.params("ime");
+            //KategorijaVM k = bp.nadjiKategoriju(param);
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+
+    
+            if(!ulogovan.getUloga().equals("superadmin")){
+                res.status(403);
+                return res;
+            }
+
+            if(!bp.obrisiKategoriju(param)) {
+            	res.status(400);
+                return "Failed!";
+                }
+
+            return "OK";
+        });
+        
+        
+        
+        
+        
+        
         get("/",(req,res) ->{
 
             Session ss = req.session(true);
@@ -62,7 +244,32 @@ public class SparkMainApp {
             return gson.toJson(bp.getVirtualneMasine().get(ime));
 
         });
+        
+        post("/rest/vm",(req,res)->{
+        	
+            Session ss = req.session(true);
+            
+            Korisnik ulogovan = ss.attribute("korisnik");
+            String org = ulogovan.getOrganizacija();
+            
+            
+            String payload = req.body();
+           
+            System.out.println(payload);
 
+            VM nova = gson.fromJson(payload,VM.class);
+            
+            if(ulogovan.getUloga().equals("admin")) {
+            	 nova.setOrganizacija(org);
+            }
+           
+            if(!bp.unikatnoImeVM(nova.getIme())){
+                res.status(400);
+                return res;
+            }
+            bp.dodajVM(nova);
+            return "OK";
+        });
         put("/rest/vm/:ime",(req,res) -> {
             Session ss = req.session(true);
             Korisnik ulogovan = ss.attribute("korisnik");

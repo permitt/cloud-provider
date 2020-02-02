@@ -46,7 +46,7 @@ Vue.component("organizacija-tabela", {
             .then(response => (this.currentUser = response.data))
             .catch(e => console.log(e.response));
         axios
-            .get('rest/organizacija/all')
+            .get('rest/organizacije/all')
             .then(response => {
                 this.organizacije = response.data;
             })

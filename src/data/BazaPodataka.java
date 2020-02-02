@@ -3,6 +3,7 @@ package data;
 import beans.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -120,13 +121,13 @@ public class  BazaPodataka {
 		}
 		return poruka;
 	}
-	 public String obrisiKategoriju(String ime) {
+	 public boolean obrisiKategoriju(String ime) {
 		 if(postojiVMOveKategorije(ime)) {
-			 return "EROR";
+			 return false;
 		 }
 		 else{
 			 this.kategorije.remove(ime);
-			 return "OK";
+			 return true;
 		 }
 		 
 	 }
@@ -437,6 +438,55 @@ public class  BazaPodataka {
 		// Ako nije superadmin, vracamo samo korisnike koji pripadaju istoj organizaciji kao admin
 		return this.organizacije.get(k.getOrganizacija()).getKorisnici();
 
+	}
+
+	public boolean unikatnoImeOrg(String ime) {
+		if(this.organizacije.containsKey(ime)) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean izmeniOrganizaciju(String param, Organizacija org) {
+		Organizacija stara = this.nadjiOrganizaciju(param);
+		if(org.getIme()!=null) {
+			stara.setIme(org.getIme());
+		}
+		if(org.getOpis()!=null) {
+			stara.setOpis(org.getOpis());
+		}
+		if(org.getLogo()!=null) {
+			stara.setLogo(org.getLogo());
+		}
+		this.organizacije.remove(param);
+		this.organizacije.put(stara.getIme(), stara);
+		return false;
+	}
+
+	public Collection<KategorijaVM> dobaviKategorije() {
+		return this.kategorije.values();
+	}
+
+	public boolean unikatnoImeKat(String ime) {
+		if(this.kategorije.containsKey(ime)) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean izmeniKategoriju(String param, KategorijaVM k) {
+		KategorijaVM stara = this.kategorije.get(param);
+		stara.setIme(k.getIme());
+		stara.setBrojJezgara(k.getBrojJezgara());
+		stara.setGPU(k.getGPU());
+		stara.setRAM(k.getRAM());
+		this.kategorije.remove(param);
+		this.kategorije.put(stara.getIme(), stara);
+		return true;
+	}
+
+	public KategorijaVM nadjiKategoriju(String param) {
+		return this.kategorije.get(param);
 	}
 
 

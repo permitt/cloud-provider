@@ -6,7 +6,10 @@ Vue.component('nova-vm', {
                 ime: "",
                 kategorija: { ime: "" },
                 diskovi: [],
-                organizacija: ""
+                organizacija: "",
+                RAM : "",
+                GPU : "",
+                brojJezgara : ""
             },
             imeUnikatError: false,
             orgError: false,
@@ -43,7 +46,7 @@ Vue.component('nova-vm', {
 					</div>   
 					 <div class="form-group">
 					    <label for="kategorija">Kategorija</label>
-					     <select id="kat" v-model="vmToAdd.kategorija" class="form-control" >
+					     <select id="kat" v-model="vmToAdd.kategorija.ime" class="form-control" >
 					        <option v-for="k in kategorije" v-bind:id="k">{{k.ime}}</option>
 					    </select>
 					    <small style="color:red" v-if="kategorijaError">Morate odabrati kategoriju!</small>
@@ -109,10 +112,13 @@ Vue.component('nova-vm', {
 
             this.kategorije.map(k => {
                 if (k.ime == this.vmToAdd.kategorija.ime)
-                    this.vmToAdd.kategroija = k;
+                    this.vmToAdd.kategorija = k;
             });
+            this.vmToAdd.brojJezgara = this.vmToAdd.kategorija.brojJezgara;
+            this.vmToAdd.RAM = this.vmToAdd.kategorija.RAM;
+            this.vmToAdd.GPU = this.vmToAdd.kategorija.GPU;
 
-
+            console.log(this.vmToAdd);
 
             axios
                 .post("/rest/vm", JSON.stringify(this.vmToAdd))

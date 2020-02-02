@@ -29,8 +29,10 @@ public class SparkMainApp {
     public static void main(String[] args) throws IOException, ParseException {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
-        
+
+        //bp.napuniBazu();
         ucitajBazu();
+
         //ORGANIZACIJE
         get("/rest/organizacije/all",(req,res) ->{
             res.type("application/json");
@@ -286,7 +288,7 @@ public class SparkMainApp {
             VM vm = gson.fromJson(payload,VM.class);
 
             //Provjera da li je prazno polje
-            if(!vm.getIme().equals("") || vm.getOrganizacija().equals("") || vm.getKategorija().getIme().equals("")){
+            if(vm.getIme().equals("") || vm.getOrganizacija().equals("") || vm.getKategorija().getIme().equals("")){
                 res.status(400);
                 return res;
             }
@@ -327,6 +329,31 @@ public class SparkMainApp {
             return gson.toJson(bp.getVirtualneMasine().get(param).getDiskovi());
         });
 
+        delete("/rest/vm/:ime",(req,res)->{
+            String param = req.params("ime");
+
+            if(!bp.getVirtualneMasine().containsKey(param)){
+                res.status(400);
+                return res;
+            }
+
+            VM vm = bp.getVirtualneMasine().get(param);
+            Session ss = req.session(true);
+            Korisnik ulogovan = ss.attribute("korisnik");
+
+            boolean priv = ulogovan.getUloga().equals("admin") && !ulogovan.getOrganizacija().equals(vm.getOrganizacija());
+
+
+            if(ulogovan.getUloga().equals("korisnik") || priv){
+                res.status(403);
+                return res;
+            }
+;
+            bp.obrisiVM(param);
+            sacuvajBazu();
+            return "OK";
+        });
+
         get("/rest/kategorija/all",(req,res) ->{
             res.type("application/json");
             String param = req.params("ime");
@@ -364,6 +391,11 @@ public class SparkMainApp {
             Session ss = req.session(true);
             HashMap<String, Object> mapa = gson.fromJson(payload, new TypeToken<HashMap<String, Object>>() {}.getType());
             String password = mapa.get("password").toString();
+
+            if(!bp.getKorisnici().containsKey(mapa.get("email").toString())){
+                return "Korisnik ne postoji.";
+            }
+
             Korisnik k = bp.nadjiKorisnika(mapa.get("email").toString());
             if(k == null) {
                 return "Korisnik ne postoji.";
@@ -617,10 +649,10 @@ public class SparkMainApp {
 
     }
     public static void sacuvajBazu() throws IOException {
-        try (Writer writer = new FileWriter("bazaPodataka.json")) {
-            gson.toJson(bp, writer);
-            System.out.println("Uspjesno upisano u bazu.");
-        }
+//        try (Writer writer = new FileWriter("bazaPodataka.json")) {
+//            gson.toJson(bp, writer);
+//            System.out.println("Uspjesno upisano u bazu.");
+//        }
     };
 
     public static void ucitajBazu(){

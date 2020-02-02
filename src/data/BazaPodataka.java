@@ -376,13 +376,14 @@ public class  BazaPodataka {
 		if(!this.diskovi.containsKey(param))
 			return false;
 		Disk disk = this.diskovi.get(param);
-		this.diskovi.remove(param);
+
 
 		// Uklanjamo iz virtualnih masina disk
 		for(var VM : this.virtualneMasine.values()){
 			if(VM.getDiskovi().contains(disk))
 				VM.getDiskovi().remove(disk);
 		}
+		this.diskovi.remove(param);
 		return true;
 	}
 

@@ -135,14 +135,14 @@ Vue.component('vm-izmjena', {
         },
         izbrisi() {
             axios
-                .delete("/rest/diskovi/" + this.ime)
+                .delete("/rest/vm/" + this.ime)
                 .then((response) => {
                     if (response.data == "OK")
-                        router.replace("/diskovi");
+                        router.replace("/");
                 })
                 .catch(e => {
                     if (e.response.status == 400)
-                        alert("Disk nije moguce obrisati.");
+                        alert("Virtuelnu masinu nije moguce obrisati.");
                 });
 
         }

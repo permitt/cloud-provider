@@ -25,7 +25,7 @@ Vue.component("diskovi-tabela", {
         <td>{{d.vm.ime}}</td>
 		<td>
 			<input type="hidden" name="itemId" v-model="d.ime"> 
-			<button class="btn btn-success" v-on:click="edit(d)">Izmjena</button>
+			<button class="btn btn-success" v-on:click="edit(d.ime)">Izmjena</button>
 		</td>
 	</tr>
 </table>
@@ -38,7 +38,7 @@ Vue.component("diskovi-tabela", {
     ,
     methods: {
         edit(disk) {
-            router.replace("/diskovi/" + disk.ime);
+            router.replace("/diskovi/" + disk);
         }
 
     },

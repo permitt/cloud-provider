@@ -115,13 +115,13 @@ public class  BazaPodataka {
 		}
 		return poruka;
 	}
-	 public String obrisiKategoriju(String ime) {
+	 public boolean obrisiKategoriju(String ime) {
 		 if(postojiVMOveKategorije(ime)) {
-			 return "EROR";
+			 return false;
 		 }
 		 else{
 			 this.kategorije.remove(ime);
-			 return "OK";
+			 return true;
 		 }
 		 
 	 }
@@ -166,9 +166,11 @@ public class  BazaPodataka {
 			return "GRESKA";
 		}
 	}
-
+	public Collection<KategorijaVM> dobaviKategorije(){
+		return this.kategorije.values();
+	}
 	public void dodajVM(VM vm) {
-		//organizacije.get(vm.getOrganizacija().getIme()).getResursi().add(vm);
+		organizacije.get(vm.getOrganizacija().getIme()).getResursi().add(vm);
 		this.virtualneMasine.put(vm.getIme(), vm);
 	}
 	public Collection<VM> dobaviListuVM(Korisnik k){
@@ -183,6 +185,7 @@ public class  BazaPodataka {
 		}
 		return vMasine.values();
 	}
+	
 	public boolean unikatnoImeVM(String ime) {
 		if(this.virtualneMasine.containsKey(ime)) 
 			return false;
@@ -190,18 +193,18 @@ public class  BazaPodataka {
 	}
 
 
-	public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String imeOrganizacije) {
+	/*public String dodajVM(String ime, KategorijaVM kategorija, ArrayList<Disk> diskovi, String imeOrganizacije) {
 		
-		VM vm ;
+
 		if(unikatnoImeVM(ime)) {
-			vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije),new ArrayList<Aktivnost>());
+			VM vm = new VM(ime,kategorija,diskovi,this.organizacije.get(imeOrganizacije),new ArrayList<Aktivnost>());
 			return "OK";
 		}
 		else {
 			return "Ime VM nije unikatno.";
 			}
 		
-	}
+	}*/
 	public void obrisiVM(String ime) {
 		//otkaciti diskove koji su povezani sa VM koja se brise
 		for(Disk d : this.diskovi.values()) {
@@ -230,6 +233,7 @@ public class  BazaPodataka {
 	}
 	public void napuniBazu() throws ParseException {
 		Organizacija org = new Organizacija();
+		
 		Organizacija org2 = new Organizacija("Addiko","haha","sda",new ArrayList<Korisnik>(),new ArrayList<VM>());
 		Korisnik superAdmin = new Korisnik("super","super","Super","Admin",new Organizacija(),"superadmin");
 		Korisnik pera = new Korisnik("pera@pera.com","pera","Petar","Peric",org2,"admin");
@@ -254,8 +258,14 @@ public class  BazaPodataka {
 		resu.add(vmm);
 		resu.add(vm);
 		Organizacija o = new Organizacija("ORG1", "lalala","logo1", kor, resu);
+		this.organizacije.put(o.getIme(), o);
+		//Korisnik ivana = new Korisnik("ivana","ivana","Ivana","Vlaisavljevic",o,"admin");
+		//o.dodajKorisnika(ivana);
+		//this.dodajKorisnika(ivana);
 		KategorijaVM kat1 = new KategorijaVM("KAT1",5,8,3);
 		KategorijaVM kat2 = new KategorijaVM("KAT2",3,4,2);
+		KategorijaVM kat3 = new KategorijaVM("KAT3",3,3,3);
+		this.kategorije.put(kat3.getIme(), kat3);
 		this.dodajKategoriju(kat2);
 		this.dodajKategoriju(kat1);
 		Disk d1 = new Disk("exp","HDD",480,org,null);
@@ -264,7 +274,7 @@ public class  BazaPodataka {
 		ArrayList<Disk> diskovi = new ArrayList<Disk>();
 		diskovi.add(d1);
 		diskovi.add(d2);
-
+		
 		ArrayList<Disk> diskovi2 = new ArrayList<Disk>();
 		diskovi2.add(d3);
 		ArrayList<Aktivnost> akt = new ArrayList<Aktivnost>();
@@ -275,8 +285,9 @@ public class  BazaPodataka {
 		Date kraj2 = sdf.parse("05-01-2020 10:25:10");
 		akt.add(new Aktivnost(pocetak,new Date()));
 		akt.add(new Aktivnost(pocetak2,kraj2));
-		VM vm1 = new VM("VM1",kat1,diskovi,o,new ArrayList<Aktivnost>());
-		VM vm2 = new VM("VM2",kat2,diskovi2,o,akt);
+		VM vm1 = new VM("VM1",kat1,diskovi,org,new ArrayList<Aktivnost>());
+		VM vm2 = new VM("VM2",kat2,diskovi2,org,akt);
+		
 		vm2.upali();
 
 		d1.setVm(vm1);
@@ -290,6 +301,7 @@ public class  BazaPodataka {
 		this.dodajVM(vm2);
 
 		org.getResursi().add(vm1);
+		
 		vm2.ugasi();
 
 	}
@@ -351,7 +363,7 @@ public class  BazaPodataka {
 		}
 		return true;
 	}
-
+	
 	public boolean unikatanMejlKorisnika(String mejl){
 		if(korisnici.containsKey(mejl))
 			return false;
@@ -405,6 +417,51 @@ public class  BazaPodataka {
 		// Ako nije superadmin, vracamo samo korisnike koji pripadaju istoj organizaciji kao admin
 		return k.getOrganizacija().getKorisnici();
 
+	}
+
+	public KategorijaVM nadjiKategoriju(String param) {
+		if(this.kategorije.containsKey(param)) {
+			return this.kategorije.get(param);
+		}
+		return null;
+	}
+
+	public boolean unikatnoImeKat(String ime) {
+		if(this.kategorije.containsKey(ime)) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean izmeniKategoriju(String param, KategorijaVM k) {
+		KategorijaVM staraK = this.nadjiKategoriju(param);
+		staraK.setIme(k.getIme());
+		staraK.setBrojJezgara(k.getBrojJezgara());
+		staraK.setGPU(k.getGPU());
+		staraK.setRAM(k.getRAM());
+		this.kategorije.remove(param);
+		this.kategorije.put(staraK.getIme(), staraK);
+		return true;
+	}
+
+	public boolean unikatnoImeOrg(String ime) {
+		if(this.organizacije.containsKey(ime)) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean izmeniOrganizaciju(String param, Organizacija org) {
+		Organizacija stara = this.nadjiOrganizaciju(param);
+		if(org.getIme()!=null) {
+		stara.setIme(org.getIme());}
+		if(org.getOpis()!=null) {
+		stara.setOpis(org.getOpis());}
+		if(org.getLogo()!=null) {
+		stara.setLogo(org.getLogo());}
+		this.organizacije.remove(param);
+		this.organizacije.put(stara.getIme(), stara);
+		return true;
 	}
 
 

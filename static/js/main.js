@@ -8,9 +8,14 @@ const korisniciIzmjena = { template: '<korisnici-izmjena></korisnici-izmjena>' }
 const noviKorisnik = { template: '<novi-korisnik></novi-korisnik>' };
 const profil = { template: '<profil></profil>' };
 const diskoviTabela = { template: '<diskovi-tabela></diskovi-tabela>' };
-const diskoviIzmjena = { template: '<diskovi-izmjena></diskovi-izmjena>' }
+const diskoviIzmjena = { template: '<diskovi-izmjena></diskovi-izmjena>' };
 const noviDisk = { template: '<novi-disk></novi-disk>' };
-
+const kategorijaTabela = {template: '<kategorija-tabela></kategorija-tabela>'};
+const kategorijaIzmena = { template: '<kategorija-izmena></kategorija-izmena>' };
+const novaKategorija = { template: '<nova-kategorija></nova-kategorija>' };
+const organizacijaTabela = {template: '<organizacija-tabela></organizacija-tabela>'};
+const novaOrganizacija = {template: '<nova-organizacija></nova-organizacija>'};
+const organizacijaIzmena = {template: '<organizacija-izmena></organizacija-izmena>'};
 const router = new VueRouter({
     mode: 'hash',
     routes: [
@@ -23,6 +28,12 @@ const router = new VueRouter({
         { path: '/diskovi', component: diskoviTabela },
         { path: '/diskovi/novi', component: noviDisk },
         { path: '/diskovi/:ime', component: diskoviIzmjena },
+        { path: '/kategorije', component: kategorijaTabela },
+        { path: '/kategorije/nova', component: novaKategorija},
+        { path: '/kategorije/:ime', component: kategorijaIzmena},
+        { path: '/organizacije', component: organizacijaTabela},
+        { path: '/organizacije/nova', component: novaOrganizacija},
+        { path: '/organizacije/:ime', component: organizacijaIzmena},
         { path: '/profil', component: profil },
         { path: '/login', component: logIn }
     ]

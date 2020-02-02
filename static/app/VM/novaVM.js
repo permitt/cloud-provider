@@ -6,12 +6,14 @@ Vue.component('nova-vm', {
                 ime: "",
                 kategorija: { ime: "" },
                 diskovi: [],
-                organizacija: { ime: "" }
+                organizacija: ""
             },
             imeUnikatError: false,
+            orgError: false,
             imeError: false,
             kategorijaError: false,
             sviDiskovi: [],
+            slobodniDiskovi: [],
             kategorije: [],
             organizacije: [],
             ulogovanSuperadmin: false,
@@ -28,9 +30,10 @@ Vue.component('nova-vm', {
 				<form>
 					<div class="form-group" v-if="ulogovanSuperadmin">
 						<label for="organizacija">Odaberi organizaciju</label>
-						<select  v-model="vmToAdd.organizacija" class="form-control">
+						<select  v-model="vmToAdd.organizacija" class="form-control" @change="azurirajDiskove()">
 							<option v-for="o in organizacije" v-bind:id="o" >{{o.ime}}</option>
-						</select>
+                        </select>
+                        <small v-if="orgError" style="color:red;">Morate odabrati organizaciju!</small>
 					</div>
 					<div class="form-group">
 					    <label for="ime">Ime</label>
@@ -41,7 +44,6 @@ Vue.component('nova-vm', {
 					 <div class="form-group">
 					    <label for="kategorija">Kategorija</label>
 					     <select id="kat" v-model="vmToAdd.kategorija" class="form-control" >
-					        <option value="sel" selected>--- Izaberi kategoriju ---</option>
 					        <option v-for="k in kategorije" v-bind:id="k">{{k.ime}}</option>
 					    </select>
 					    <small style="color:red" v-if="kategorijaError">Morate odabrati kategoriju!</small>
@@ -50,7 +52,7 @@ Vue.component('nova-vm', {
 					<div class="form-group">
 					 <label for="diskovi">Zakaci diskove:</label>
 					   <select  multiple v-model="vmToAdd.diskovi" class="form-control" id="diskovi">
-				        <option :value="d" v-for="d in sviDiskovi" >{{d.ime}}</option>
+				        <option :value="d" v-for="d in slobodniDiskovi" >{{d.ime}}</option>
 				    </select>
 				    </div>
 				    <span></span>
@@ -61,6 +63,15 @@ Vue.component('nova-vm', {
 	`
     ,
     methods: {
+        azurirajDiskove() {
+            this.slobodniDiskovi = [];
+
+            this.sviDiskovi.map(el => {
+                if (this.vmToAdd.organizacija == el.organizacija)
+                    this.slobodniDiskovi.push(el);
+            });
+        },
+
 
         formValid() {
             let valid = true;
@@ -68,17 +79,23 @@ Vue.component('nova-vm', {
             this.imeError = false;
             this.imeUnikatError = false;
             this.kategorijaError = false;
+            this.orgError = false;
 
             if (this.vmToAdd.ime == "") {
                 this.imeError = true;
                 valid = false;
             }
-            /*var e = document.getElementById("kat");
-            var selektovan = e.options[e.selectedIndex].text;
-            if(selektovan =="--- Izaberi kategoriju ---"){
-            	this.kategorijaError = true;
-            	valid = false;
-            } */
+            if (this.vmToAdd.organizacija == "") {
+                this.orgError = true;
+                valid = false;
+            }
+            console.log(this.vmToAdd);
+            //var e = document.getElementById("kat");
+            //var selektovan = e.options[e.selectedIndex].text
+            if (this.vmToAdd.kategorija.ime == "") {
+                this.kategorijaError = true;
+                valid = false;
+            }
 
 
 
@@ -95,10 +112,7 @@ Vue.component('nova-vm', {
                     this.vmToAdd.kategroija = k;
             });
 
-            this.organizacije.map(o => {
-                if (o.ime == this.vmToAdd.organizacija.ime)
-                    this.vmToAdd.organizacija = o;
-            });
+
 
             axios
                 .post("/rest/vm", JSON.stringify(this.vmToAdd))
@@ -125,7 +139,7 @@ Vue.component('nova-vm', {
             .then(response => (this.sviDiskovi = response.data));
         axios.get('/rest/kategorija/all')
             .then(response => (this.kategorije = response.data));
-        axios.get('/rest/organizacije/all')
+        axios.get('/rest/organizacija/all')
             .then(response => (this.organizacije = response.data));
 
 

@@ -8,7 +8,7 @@ Vue.component('novi-disk', {
                 ime: "",
                 tip: "HDD",
                 kapacitet: 1,
-                vm: { ime: "" },
+                vm: "",
                 organizacija: { ime: "" }
             },
             imeUnikatError: false,
@@ -49,7 +49,7 @@ Vue.component('novi-disk', {
    
     <div class="form-group">
     <label for="vm">VM</label>
-    <select v-model="diskToAdd.vm.ime" class="form-control" required>
+    <select v-model="diskToAdd.vm" class="form-control" required>
         <option v-for="v in VMs" v-bind:id="v.ime">{{v.ime}}</option>
     </select>
     <small v-if="vmError" style="color:red">Morate odabrati virtuelnu masinu!</small>
@@ -91,13 +91,9 @@ Vue.component('novi-disk', {
             if (!this.formValid())
                 return;
 
-            this.VMs.map(vm => {
-                if (vm.ime == this.diskToAdd.vm.ime)
-                    this.diskToAdd.vm = vm;
-            });
 
             this.diskToAdd.organizacija = this.diskToAdd.vm.organizacija;
-            console.log(this.diskToAdd.organizacija);
+
 
             axios
                 .post("/rest/diskovi", JSON.stringify(this.diskToAdd))

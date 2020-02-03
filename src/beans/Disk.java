@@ -9,7 +9,11 @@ public class Disk {
     private String organizacija;
     private String vm;
 
-
+    @Override
+    public boolean equals(Object obj) {
+        Disk d = (Disk) obj;
+        return this.getIme().equals(d.getIme());
+    }
 
     public Disk(String ime, String tip, int kapacitet, String org, String vm) {
         this.ime = ime;
@@ -58,4 +62,5 @@ public class Disk {
     public void setOrganizacija(String org) {
         this.organizacija = org;
     }
+
 }

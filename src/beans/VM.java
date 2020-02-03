@@ -12,7 +12,13 @@ public class VM {
 	private ArrayList<Disk> diskovi;
 	private String organizacija;
 	private ArrayList<Aktivnost> listaAktivnosti;
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		VM vm = (VM) obj;
+		return this.getIme().equals(vm.getIme());
+	}
+
 	public VM() {
 		
 	}

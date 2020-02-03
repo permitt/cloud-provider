@@ -76,7 +76,7 @@ Vue.component('vm-izmjena', {
     </div>
 
 
-    <div class="form-group">
+    <div v-if="currentUser.uloga != 'korisnik'" class="form-group">
     <label for="diskoviDostupniSelect">Diskovi dostupni</label>
     <div class="input-group">
     <select id="diskoviDostupniSelect" v-model="diskDodaj" class="form-control" required>

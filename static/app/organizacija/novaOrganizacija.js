@@ -1,16 +1,16 @@
 Vue.component('nova-organizacija', {
     data: function () {
         return {
-        	currentUser: {uloga:"superadmin"},
-            ime:"",
-            opis:"",
-            i_file:"",
+            currentUser: { uloga: "superadmin" },
+            ime: "",
+            opis: "",
+            i_file: "",
             imeUnikatError: false,
-            imeError:false,
-         
+            imeError: false,
+
         }
     },
-    template:`
+    template: `
     	<div class="container">
     	<div class="col-lg-8 mx-auto" style="margin:30px 0;">
 	    <h3>Nova organizacijja</h3>
@@ -44,18 +44,18 @@ Vue.component('nova-organizacija', {
 	</div>
 	</div>
 	`
-	    ,
+    ,
     methods: {
-    	formValid() {
-    		let valid = true;
+        formValid() {
+            let valid = true;
             this.imeError = false;
             this.imeUnikatError = false;
-            
+
             if (this.ime == "") {
                 this.imeError = true;
                 return false;
             }
-            
+
             return valid;
         },
         dodaj() {
@@ -63,7 +63,7 @@ Vue.component('nova-organizacija', {
             if (!this.formValid())
                 return;
             let formData = new FormData(this.$refs.dodaj);
-          //  console.log(this.i_file);
+            //  console.log(this.i_file);
             axios
                 .post("/rest/organizacije/dodaj", formData)
                 .then(response => {
@@ -75,10 +75,10 @@ Vue.component('nova-organizacija', {
                 });
         },
     },
- mounted() {
-    	axios.get('rest/users/current')
-        .then(response => (this.currentUser = response.data));
-    	
-        
+    mounted() {
+        axios.get('rest/users/current')
+            .then(response => (this.currentUser = response.data));
+
+
     },
 });

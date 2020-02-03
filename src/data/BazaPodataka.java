@@ -348,10 +348,22 @@ public class  BazaPodataka {
 
 	public boolean izmjeniDisk(String ime,Disk d){
 		Disk disk = this.nadjiDisk(ime);
+		for(var vm : this.virtualneMasine.values()){
+			if(vm.getDiskovi().contains(disk)){
+				vm.getDiskovi().remove(disk);
+			}
+		}
+		VM vm = this.virtualneMasine.get(disk.getVm());
+		this.organizacije.get(disk.getOrganizacija()).getResursi().remove(vm);
+
 		disk.setIme(d.getIme());
 		disk.setKapacitet(d.getKapacitet());
 		disk.setTip(d.getTip());
 		disk.setVm(d.getVm());
+
+
+		this.virtualneMasine.get(disk.getVm()).getDiskovi().add(disk);
+		this.organizacije.get(disk.getOrganizacija()).getResursi().add(vm);
 		this.diskovi.remove(ime);
 		this.diskovi.put(disk.getIme(),disk);
 		return true;
@@ -362,7 +374,7 @@ public class  BazaPodataka {
 			return this.diskovi.values();
 		}
 		System.out.println(k);
-		Collection<Disk> retVal = new ArrayList<>();
+		Collection<Disk> retVal = new ArrayList<Disk>();
 		for(VM v : this.organizacije.get(k.getOrganizacija()).getResursi()){
 			for(Disk d : v.getDiskovi())
 				retVal.add(d);
@@ -383,6 +395,7 @@ public class  BazaPodataka {
 			if(VM.getDiskovi().contains(disk))
 				VM.getDiskovi().remove(disk);
 		}
+
 		this.diskovi.remove(param);
 		return true;
 	}

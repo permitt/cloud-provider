@@ -60,6 +60,7 @@ Vue.component('profil', {
 
     
     <button type="button" class="btn btn-primary" v-on:click="sacuvaj()">Sacuvaj</button>
+    <button v-if="currentUser.uloga == 'admin'" type="button" class="btn btn-outline-primary" v-on:click="org()" >Organizacija</button>
     </form>
 
 
@@ -71,6 +72,9 @@ Vue.component('profil', {
 `
     ,
     methods: {
+        org() {
+            router.push('/organizacije/' + this.currentUser.organizacija);
+        },
         validateEmail(email) {
             var re = /\S+@\S+\.\S+/;
             return re.test(email);

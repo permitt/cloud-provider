@@ -460,7 +460,7 @@ public class  BazaPodataka {
 		}
 		this.organizacije.remove(param);
 		this.organizacije.put(stara.getIme(), stara);
-		return false;
+		return true;
 	}
 
 	public Collection<KategorijaVM> dobaviKategorije() {

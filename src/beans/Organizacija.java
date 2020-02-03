@@ -11,7 +11,7 @@ public class Organizacija {
 	private  ArrayList<VM> resursi;
 	
 	public Organizacija() {
-		this.ime= "NLB banka";
+		
 		this.korisnici = new ArrayList<Korisnik>();
 		this.resursi = new ArrayList<VM>();
 	}

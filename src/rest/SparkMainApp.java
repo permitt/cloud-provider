@@ -112,7 +112,7 @@ public class SparkMainApp {
         put("/rest/organizacije/:ime",(req,res)->{
         	req.attribute("org.eclipse.jetty.multipartConfig",new MultipartConfigElement("/temp"));
             Part filePart = req.raw().getPart("i_file");
-            
+            System.out.println(filePart.getSubmittedFileName());
             String imePart = req.queryParams("organizacija.ime");
             String opisPart = req.queryParams("organizacija.opis");
            
@@ -126,6 +126,7 @@ public class SparkMainApp {
             org.setIme(imePart);
             org.setOpis(opisPart);
             org.setLogo("images/"+filePart.getSubmittedFileName());
+          
             String param = req.params("ime");
             if(org.getIme()!=null) {
             	if(!org.getIme().equals(param) && !bp.unikatnoImeOrg(org.getIme())){
@@ -134,7 +135,7 @@ public class SparkMainApp {
             	}
             }
             if(!bp.izmeniOrganizaciju(param,org)) {
-            	System.out.println("jes obde?");
+            	
             	return "Failed";}
             sacuvajBazu();
             return "OK";

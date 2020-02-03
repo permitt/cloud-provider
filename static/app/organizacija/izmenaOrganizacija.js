@@ -18,7 +18,7 @@ Vue.component('organizacija-izmena', {
 	    <h3 align="center">Organizacija {{this.ime}} </h3>
 	    <div class="mb-3">
 	    
-					<center><img  v-bind:src="organizacija.logo" class="user-image"></center>
+					<center><img  v-bind:src="organizacija.logo" class="rounded-circle user-image" style="width: 200px; height: 200px;" ></center>
 				</div>
 
 	    <form method="POST" ref="sacuvaj" v-on:submit="sacuvaj">
@@ -66,7 +66,8 @@ Vue.component('organizacija-izmena', {
             return valid;
         },
         sacuvaj() {
-
+			console.log("AAA " +this.i_file);
+			console.log(this.organizacija);
             if (!this.formValid())
                 return;
             let formData = new FormData(this.$refs.sacuvaj);
@@ -86,10 +87,14 @@ Vue.component('organizacija-izmena', {
     	axios.get('rest/users/current')
         .then(response => (this.currentUser = response.data));
     	axios.get('rest/organizacije/'+this.ime)
-    	.then(response => (this.organizacija = response.data));
-    	this.opis = this.organizacija.opis;
-    	this.i_file = this.organizacija.logo;
-    	 
+		.then(response => {
+			this.organizacija = response.data;
+			this.i_file = this.organizacija.logo;
+			this.opis = this.organizacija.opis;
+		});
+    	
+    	
+    	
         
     },
 });
